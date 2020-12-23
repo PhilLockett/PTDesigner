@@ -40,9 +40,9 @@ The following commands clone and execute the code:
 
 This code has the following points of interest:
 
-  * PTDesigner is Maven project that uses JavaFX, FXML and CSS.
+  * PTDesigner is a Maven project that uses JavaFX, FXML and CSS.
   * PTDesigner uses Chemical Element data from the elements package.
   * The tabbed window is created using FXML and CSS.
-  * The table/grid window is generated with code.
+  * The table/grid window is generated with code in the table package.
   * The GUI was developed using SceneBuilder.
   
