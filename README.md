@@ -14,6 +14,7 @@ I built PTDesigner with the following:
 
   * Java 15.0.1
   * Apache Maven 3.6.3
+  * Git 2.21.0
 
 ## Cloning and Running the GUI version
 
