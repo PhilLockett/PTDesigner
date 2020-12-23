@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="phillockett65.PTable.MainController">
+   <children>
+      <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <tabs>
+          <Tab text="Details">
+            <content>
+              <fx:include fx:id="detailsTab" source="DetailsTab.fxml" />
+            </content>
+          </Tab>
+          <Tab text="Status">
+            <content>
+              <fx:include fx:id="statusTab" source="StatusTab.fxml" />
+            </content>
+          </Tab>
+          <Tab text="Layout Settings">
+            <content>
+              <fx:include fx:id="lytSettingsTab" source="LytSettingsTab.fxml" />
+            </content>
+          </Tab>
+          <Tab text="Subcategory Settings">
+            <content>
+              <fx:include fx:id="subSettingsTab" source="SubSettingsTab.fxml" />
+            </content>
+          </Tab>
+          <Tab text="State Settings">
+            <content>
+              <fx:include fx:id="sttSettingsTab" source="SttSettingsTab.fxml" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

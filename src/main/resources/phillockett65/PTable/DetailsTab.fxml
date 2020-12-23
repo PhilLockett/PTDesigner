@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="phillockett65.PTable.DetailsController">
+   <children>
+      <Label fx:id="lblDetailsElementName" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="20.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="Element Name:" />
+      <Label fx:id="datDetailsElementName" layoutX="190.0" layoutY="20.0" prefHeight="17.0" prefWidth="550.0" text="Hydrogen" />
+      <Label fx:id="lblDetailsElementSymbol" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="40.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="Element Symbol:" />
+      <Label fx:id="datDetailsElementSymbol" layoutX="190.0" layoutY="40.0" prefHeight="17.0" prefWidth="550.0" text="H" />
+      <Label fx:id="lblDetailsAtomicNumber" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="60.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="Atomic Number:" />
+      <Label fx:id="datDetailsAtomicNumber" layoutX="190.0" layoutY="60.0" prefHeight="17.0" prefWidth="550.0" text="1" />
+      <Label fx:id="lblDetailsGroup" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="80.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="Group:" />
+      <Label fx:id="datDetailsGroup" layoutX="190.0" layoutY="80.0" prefHeight="17.0" prefWidth="550.0" text="Hydrogen" />
+      <Label fx:id="lblDetailsGroup32" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="100.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="Group-32:" />
+      <Label fx:id="datDetailsGroup32" layoutX="190.0" layoutY="100.0" prefHeight="17.0" prefWidth="550.0" text="H" />
+      <Label fx:id="lblDetailsPeriod" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="120.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="Period:" />
+      <Label fx:id="datDetailsPeriod" layoutX="190.0" layoutY="120.0" prefHeight="17.0" prefWidth="550.0" text="1" />
+      <Label fx:id="lblDetailsAtomicWeight" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="140.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="Atomic Weight:" />
+      <Label fx:id="datDetailsAtomicWeight" layoutX="190.0" layoutY="140.0" prefHeight="17.0" prefWidth="550.0" text="Hydrogen" />
+      <Label fx:id="lblDetailsDensity" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="160.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="Density (g/cm^3):" />
+      <Label fx:id="datDetailsDensity" layoutX="190.0" layoutY="160.0" prefHeight="17.0" prefWidth="550.0" text="H" />
+      <Label fx:id="lblDetailsMeltingPoint" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="180.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="Melting point (K):" />
+      <Label fx:id="datDetailsMeltingPoint" layoutX="190.0" layoutY="180.0" prefHeight="17.0" prefWidth="550.0" text="1" />
+      <Label fx:id="lblDetailsBoilingPoint" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="200.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="Boiling point (K):" />
+      <Label fx:id="datDetailsBoilingPoint" layoutX="190.0" layoutY="200.0" prefHeight="17.0" prefWidth="550.0" text="1" />
+      <Label fx:id="lblDetailsState" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="220.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="State (at 273K):" />
+      <Label fx:id="datDetailsState" layoutX="190.0" layoutY="220.0" prefHeight="17.0" prefWidth="550.0" text="Solid" />
+      <Label fx:id="lblDetailsSpecificHeat" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="240.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="Specific heat capacity (J/g.K):" />
+      <Label fx:id="datDetailsSpecificHeat" layoutX="190.0" layoutY="240.0" prefHeight="17.0" prefWidth="550.0" text="H" />
+      <Label fx:id="lblDetailsElectronegativity" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="260.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="Electronegativity:" />
+      <Label fx:id="datDetailsElectronegativity" layoutX="190.0" layoutY="260.0" prefHeight="17.0" prefWidth="550.0" text="1" />
+      <Label fx:id="lblDetailsSubcategory" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="280.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="Subcategory:" />
+      <Label fx:id="datDetailsSubcategory" layoutX="190.0" layoutY="280.0" prefHeight="17.0" prefWidth="550.0" text="1" />
+      <Label fx:id="lblDetailsElectronShell" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="300.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="Electron shell:" />
+      <Label fx:id="datDetailsElectronShell" layoutX="190.0" layoutY="300.0" prefHeight="17.0" prefWidth="550.0" text="1" />
+      <Label fx:id="lblDetailsElectronSubshell" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="320.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="Electron subshell:" />
+      <Label fx:id="datDetailsElectronSubshell" layoutX="190.0" layoutY="320.0" prefHeight="17.0" prefWidth="550.0" text="1" />
+      <Label fx:id="lblDetailsElectronConfiguration" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="340.0" prefHeight="17.0" prefWidth="170.0" style="-fx-font-weight: bold;" text="Electron configuration:" />
+      <Label fx:id="datDetailsElectronConfiguration" layoutX="190.0" layoutY="340" prefHeight="17.0" prefWidth="550.0" text="1" />
+   </children>
+</AnchorPane>
