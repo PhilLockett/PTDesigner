@@ -41,7 +41,7 @@ public class App extends Application {
 
 	@Override
 	public void start(Stage stage) throws IOException {
-		scene = new Scene(loadFXML("Main"), 640, 480);
+		scene = new Scene(loadFXML("Main"));
 		scene.getStylesheets().add(App.class.getResource("application.css").toExternalForm());
 		stage.setTitle("Periodic Table Designer");
 		stage.setOnCloseRequest(e -> Platform.exit());
