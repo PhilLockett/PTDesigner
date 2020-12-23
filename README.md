@@ -8,6 +8,12 @@ This project has been set up as a Maven project that uses JavaFX, FXML and
 CSS to render the GUI. Maven can be run from the command line, it resolves 
 the dependencies and builds the application independently of an IDE.
 
+The intention of this application is to easily enable changes to be made to a 
+Periodic Table layout in order to try and find an improvement to the standard 
+layout (good luck). The Status tab attempts to calculate the quality of the 
+layout, however, this is a first attempt and I'm sure there are better methods 
+but I haven't found them.  
+
 ## Dependencies
 
 I built PTDesigner with the following:
@@ -36,4 +42,7 @@ This code has the following points of interest:
 
   * PTDesigner is Maven project that uses JavaFX, FXML and CSS.
   * PTDesigner uses Chemical Element data from the elements package.
-  * A user GUI was developed using SceneBuilder.
+  * The tabbed window is created using FXML and CSS.
+  * The table/grid window is generated with code.
+  * The GUI was developed using SceneBuilder.
+  
