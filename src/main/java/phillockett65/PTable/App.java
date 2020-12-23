@@ -37,30 +37,30 @@ import java.io.IOException;
  */
 public class App extends Application {
 
-    private static Scene scene;
+	private static Scene scene;
 
-    @Override
-    public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("Main"), 640, 480);
+	@Override
+	public void start(Stage stage) throws IOException {
+		scene = new Scene(loadFXML("Main"), 640, 480);
 		scene.getStylesheets().add(App.class.getResource("application.css").toExternalForm());
 		stage.setTitle("Periodic Table Designer");
 		stage.setOnCloseRequest(e -> Platform.exit());
 		stage.resizableProperty().setValue(false);
-        stage.setScene(scene);
-        stage.show();
-    }
+		stage.setScene(scene);
+		stage.show();
+	}
 
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
+	static void setRoot(String fxml) throws IOException {
+		scene.setRoot(loadFXML(fxml));
+	}
 
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
-    }
+	private static Parent loadFXML(String fxml) throws IOException {
+		FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+		return fxmlLoader.load();
+	}
 
-    public static void main(String[] args) {
-        launch();
-    }
+	public static void main(String[] args) {
+		launch();
+	}
 
 }
