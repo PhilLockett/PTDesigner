@@ -144,13 +144,14 @@ public class PTable extends Stage {
 	private int findState(ElementConfig e) {
 		final float melt = e.getMelt();
 		final float boil = e.getBoil();
+		final float temp = main.getTemp();
 		if ((melt == 0) && (boil == 0))
 			return Model.UNDEFINED;
 
-		if (main.getTemp() < melt)
+		if (temp < melt)
 			return Model.SOLID;
 
-		if (main.getTemp() < boil)
+		if (temp < boil)
 			return Model.LIQUID;
 
 		return Model.GAS;
