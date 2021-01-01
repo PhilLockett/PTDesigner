@@ -27,6 +27,7 @@ package phillockett65.PTable;
 
 import javafx.fxml.FXML;
 import javafx.scene.paint.Color;
+import phillockett65.PTable.elements.ElementConfig;
 import phillockett65.PTable.table.Cell;
 import phillockett65.PTable.table.Desc;
 import phillockett65.PTable.table.PTable;
@@ -71,15 +72,43 @@ public class MainController {
 		statusTabController.updateSettings();
 	}
 
+	/**
+	 * Determines whether the given element is solid, liquid or gas at the 
+	 * current temperature.
+	 * 
+	 * @param e the given element.
+	 * @return the state.
+	 */
+	private int findState(ElementConfig e) {
+		final float melt = e.getMelt();
+		final float boil = e.getBoil();
+		final float temp = model.getTemp();
+		if ((melt == 0) && (boil == 0))
+			return Model.UNDEFINED;
+
+		if (temp < melt)
+			return Model.SOLID;
+
+		if (temp < boil)
+			return Model.LIQUID;
+
+		return Model.GAS;
+	}
+
+	public Color getStateColour(ElementConfig e) {
+		final int index = findState(e);
+		Color ret = model.getStateColour(index);
+		return ret;
+	}
+
 	public Color getStateColour(int index) {
 		Color ret = model.getStateColour(index);
 		return ret;
 	}
 
-	public boolean setStateColour(int index, Color value) {
-		boolean ret = model.setStateColour(index, value);
-		if (ret)
-			table.setStateColour(index);
+	public String getStateString(ElementConfig e) {
+		final int index = findState(e);
+		String ret = model.getStateString(index);
 		return ret;
 	}
 
@@ -88,30 +117,13 @@ public class MainController {
 		return ret;
 	}
 
-	public boolean setStateString(int index, String value) {
-		boolean ret = model.setStateString(index, value);
-		return ret;
-	}
-
 	public Color getSubcategoryColour(int index) {
 		Color ret = model.getSubcategoryColour(index);
 		return ret;
 	}
 
-	public boolean setSubcategoryColour(int index, Color value) {
-		boolean ret = model.setSubcategoryColour(index, value);
-		if (ret)
-			table.setSubcategoryColour(index);
-		return ret;
-	}
-
 	public String getSubcategoryString(int index) {
 		String ret = model.getSubcategoryString(index);
-		return ret;
-	}
-
-	public boolean setSubcategoryString(int index, String value) {
-		boolean ret = model.setSubcategoryString(index, value);
 		return ret;
 	}
 
@@ -146,6 +158,7 @@ public class MainController {
 	public int getWidth() {
 		return model.getWidth();
 	}
+
 	public int getHeight() {
 		return model.getHeight();
 	}
@@ -153,49 +166,84 @@ public class MainController {
 	public Desc getZ() {
 		return model.getZ();
 	}
+
 	public Desc getSymbol() {
 		return model.getSymbol();
 	}
 
-	public void setRows(int value) {
-		model.setRows(value);
+	public boolean updateSubcategory(int index, String text, Color colour) {
+
+		if (model.setSubcategoryString(index, text)) {
+			model.setSubcategoryColour(index, colour);
+			table.setSubcategoryColour(index, colour);
+
+			return true;
+		}
+
+		return false;
 	}
 
-	public void setCols(int value) {
-		model.setCols(value);
+	public boolean updateState(int index, String text, Color colour) {
+
+		if (model.setStateString(index, text)) {
+			model.setStateColour(index, colour);
+			table.setStateColour(index, colour);
+
+			return true;
+		}
+
+		return false;
 	}
 
-	public void setTileSize(int value) {
-		model.setTileSize(value);
+	public void updateLayout(int rows, int cols, int tile, int border, int temp) {
+		ChangeChecker rowCkr = new ChangeChecker(getRows(), rows);
+		if (rowCkr.isChanged())
+			model.setRows(rowCkr.getNewValue());
+
+		ChangeChecker colCkr = new ChangeChecker(getCols(), cols);
+		if (colCkr.isChanged())
+			model.setCols(colCkr.getNewValue());
+
+		ChangeChecker tileCkr = new ChangeChecker(getTileSize(), tile);
+		if (tileCkr.isChanged())
+			model.setTileSize(tileCkr.getNewValue());
+
+		ChangeChecker brdrCkr = new ChangeChecker(getBorderSize(), border);
+		if (brdrCkr.isChanged())
+			model.setBorderSize(brdrCkr.getNewValue());
+
+		ChangeChecker tempCkr = new ChangeChecker(getTemp(), temp);
+		if (tempCkr.isChanged()) {
+			// Update model with temperature change.
+			model.setTemp(tempCkr.getNewValue());
+
+			// Update table with temperature change.
+			table.updateState(tempCkr.getNewValue());
+
+			// Update Details Tab with temperature change.
+			Cell cell = table.getCurrentCell();
+			if (!cell.isBlank())
+				detailsTabController.setSelected(cell);
+		}
+
+		// Update the PTable.
+		final int ZFontSize = model.getZ().getSizeInt();
+		final int symbolFontSize = model.getSymbol().getSizeInt();
+		table.updateLayout(rowCkr, colCkr, tileCkr, brdrCkr, tempCkr, ZFontSize, symbolFontSize);
 	}
 
-	public void setBorderSize(int value) {
-		model.setBorderSize(value);
-	}
-
-	public void setTemp(int value) {
-		model.setTemp(value);
-	}
-
-	public void redrawTable(boolean gridChanged, boolean sizeChanged, boolean tempChanged) {
-		if (tempChanged)
-			table.updateState();
-
-		if (gridChanged)
-			table.gridChange();
-
-		if (sizeChanged)
-			table.sizeChange();
-
-		table.drawTable();
-	}
-
+	/**
+	 * Reverses the order of the columns and repositions the cells.
+	 */
 	public void flipColumns() {
-		table.flipColumns();
+		table.flipColumns(model.getStepSize(), model.getBorderSize());
 	}
 
+	/**
+	 * Reverses the order of the rows and then repositions the cells.
+	 */
 	public void flipRows() {
-		table.flipRows();
+		table.flipRows(model.getStepSize(), model.getBorderSize());
 	}
 
 	public Quantities getQuantities() {

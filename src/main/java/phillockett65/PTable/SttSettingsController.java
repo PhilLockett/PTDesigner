@@ -87,9 +87,9 @@ public class SttSettingsController {
 		if (text.length() < 1)
 			return;
 
-		int selected = chcSttSettings.getSelectionModel().getSelectedIndex();
-		if (main.setStateString(selected, text)) {
-			main.setStateColour(selected, colSttSettings.getValue());
+		final int selected = chcSttSettings.getSelectionModel().getSelectedIndex();
+		final Color colour = colSttSettings.getValue();
+		if (main.updateState(selected, text, colour)) {
 			StatesList.set(selected, text);
 			chcSttSettings.getSelectionModel().select(selected);
 		}

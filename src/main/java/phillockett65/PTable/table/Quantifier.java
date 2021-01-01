@@ -30,7 +30,7 @@ import phillockett65.PTable.elements.ElementConfig;
 
 public class Quantifier {
 
-	private Cell[][] grid;
+	private Grid grid;
 
 	private boolean upToDate = false;
 	private int elementCount = 0;
@@ -44,7 +44,7 @@ public class Quantifier {
 	 * 
 	 * @param grid reference used to calculate the quantities.
 	 */
-	public Quantifier(Cell[][] grid) {
+	public Quantifier(Grid grid) {
 		this.grid = grid;
 		clear();
 
@@ -58,7 +58,7 @@ public class Quantifier {
 	 * 
 	 * @param grid	the new grid to analyze.
 	 */
-	public void setGrid(Cell[][] grid) {
+	public void setGrid(Grid grid) {
 		this.grid = grid;
 		clear();
 	}
@@ -83,46 +83,46 @@ public class Quantifier {
 		electronSubshellSimilarity.reset();
 		electronConfigSimilarity.reset();
 
-		final int rows = grid.length;
-			final int cols = grid[0].length;
+		final int rows = grid.getRows();
+		final int cols = grid.getCols();
 
 		for (int r = 0; r < rows; ++r) {
 			for (int c = 0; c < cols; ++c) {
-				final Cell cell = grid[r][c];
+				final Cell cell = grid.getCell(r, c);
 				if (cell.isBlank())
 					continue;
-	
+
 				elementCount++;
 				Cell adjacent;
 				if (r > 0) {
-					adjacent = grid[r-1][c];
+					adjacent = grid.getCell(r-1, c);
 					if (!adjacent.isBlank()) {
 						// Neighbour to the North.
 						neighbourCount++;
 						calcSimilarities(cell.getE(), adjacent.getE());
 					}
 				}
-	
+
 				if (r < rows-1) {
-					adjacent = grid[r+1][c];
+					adjacent = grid.getCell(r+1, c);
 					if (!adjacent.isBlank()) {
 						// Neighbour to the South.
 						neighbourCount++;
 						calcSimilarities(cell.getE(), adjacent.getE());
 					}
 				}
-	
+
 				if (c > 0) {
-					adjacent = grid[r][c-1];
+					adjacent = grid.getCell(r, c-1);
 					if (!adjacent.isBlank()) {
 						// Neighbour to the West.
 						neighbourCount++;
 						calcSimilarities(cell.getE(), adjacent.getE());
 					}
 				}
-	
+
 				if (c < cols-1) {
-					adjacent = grid[r][c+1];
+					adjacent = grid.getCell(r, c+1);
 					if (!adjacent.isBlank()) {
 						// Neighbour to the East.
 						neighbourCount++;

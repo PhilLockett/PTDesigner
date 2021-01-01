@@ -92,41 +92,13 @@ public class LytSettingsController {
 	 * has changed and which haven't.
 	 */
 	private void updateSettings() {
-		boolean gridChanged = false;
-		boolean sizeChanged = false;
-		boolean tempChanged = false;
+		int rows = Integer.parseInt(spnLytRows.getValue().toString());
+		int cols = Integer.parseInt(spnLytColumns.getValue().toString());
+		int tile = Integer.parseInt(spnLytTile.getValue().toString());
+		int brdr = Integer.parseInt(spnLytBorder.getValue().toString());
+		int temp = Integer.parseInt(spnLytTemp.getValue().toString());
 
-		ChangeChecker rowCkr = new ChangeChecker(main.getRows(), spnLytRows.getValue().toString());
-		if (rowCkr.isChanged()) {
-			main.setRows(rowCkr.getNewValue());
-			gridChanged = true;
-		}
-
-		ChangeChecker colCkr = new ChangeChecker(main.getCols(), spnLytColumns.getValue().toString());
-		if (colCkr.isChanged()) {
-			main.setCols(colCkr.getNewValue());
-			gridChanged = true;
-		}
-
-		ChangeChecker tileCkr = new ChangeChecker(main.getTileSize(), spnLytTile.getValue().toString());
-		if (tileCkr.isChanged()) {
-			main.setTileSize(tileCkr.getNewValue());
-			sizeChanged = true;
-		}
-
-		ChangeChecker brdrCkr = new ChangeChecker(main.getBorderSize(), spnLytBorder.getValue().toString());
-		if (brdrCkr.isChanged()) {
-			main.setBorderSize(brdrCkr.getNewValue());
-			sizeChanged = true;
-		}
-
-		ChangeChecker tempCkr = new ChangeChecker(main.getTemp(), spnLytTemp.getValue().toString());
-		if (tempCkr.isChanged()) {
-			main.setTemp(tempCkr.getNewValue());
-			tempChanged = true;
-		}
-
-		main.redrawTable(gridChanged, sizeChanged, tempChanged);
+		main.updateLayout(rows, cols, tile, brdr, temp);
 	}
 
 

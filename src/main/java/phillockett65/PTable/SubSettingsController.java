@@ -87,9 +87,9 @@ public class SubSettingsController {
 		if (text.length() < 1)
 			return;
 
-		int selected = chcSubSettings.getSelectionModel().getSelectedIndex();
-		if (main.setSubcategoryString(selected, text)) {
-			main.setSubcategoryColour(selected, colSubSettings.getValue());
+		final int selected = chcSubSettings.getSelectionModel().getSelectedIndex();
+		final Color colour = colSubSettings.getValue();
+		if (main.updateSubcategory(selected, text, colour)) {
 			SubcategoryList.set(selected, text);
 			chcSubSettings.getSelectionModel().select(selected);
 		}

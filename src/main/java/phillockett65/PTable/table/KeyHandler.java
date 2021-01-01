@@ -37,7 +37,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	private int action = NEITHER;
 
 	private PTable table;
-	private Cell[][] grid;
+	private Grid grid;
 	private Selection selection;
 
 	private KeyState shift;
@@ -83,7 +83,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	 * 
 	 * @param grid to navigate.
 	 */
-	public void setGrid(Cell[][] grid) {
+	public void setGrid(Grid grid) {
 		this.grid = grid;
 	}
 
@@ -201,13 +201,13 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			return;		// Ignore key release.
 
 		if (action == MOVING) {
-			if (selection.getBottom() < grid.length-1) {
+			if (selection.getBottom() < grid.getRows()-1) {
 				table.moveSelection(KeyCode.DOWN);
 				selection.moveDown();
 			}
 
 		} else {
-			if (selection.getRow() < grid.length-1) {
+			if (selection.getRow() < grid.getRows()-1) {
 				table.highlightSelectedCells(false);
 				selection.positionDown();
 				saveCurrent();
@@ -259,13 +259,13 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			return;		// Ignore key release.
 
 		if (action == MOVING) {
-			if (selection.getRight() < grid[0].length-1) {
+			if (selection.getRight() < grid.getCols()-1) {
 				table.moveSelection(KeyCode.RIGHT);
 				selection.moveRight();
 			}
 
 		} else {
-			if (selection.getCol() < grid[0].length-1) {
+			if (selection.getCol() < grid.getCols()-1) {
 				table.highlightSelectedCells(false);
 				selection.positionRight();
 				saveCurrent();

@@ -29,12 +29,10 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import phillockett65.PTable.ChangeChecker;
 import phillockett65.PTable.MainController;
-import phillockett65.PTable.Model;
-import phillockett65.PTable.elements.ElementConfig;
-import phillockett65.PTable.elements.Elements;
 
 public class PTable extends Stage {
 	
@@ -46,9 +44,8 @@ public class PTable extends Stage {
 
 	private final String title;
 
-	private Cell[][] grid;
+	private Grid grid;
 	private Selection selection;
-	private boolean gridChanged = false;
 
 	private Quantifier quantities;
 
@@ -76,7 +73,6 @@ public class PTable extends Stage {
 		group = new Group();
 
 		initTable();
-		drawTable();
 
 		scene = new Scene(group, main.getWidth(), main.getHeight());
 		setScene(scene);
@@ -97,144 +93,43 @@ public class PTable extends Stage {
 		final int cols = main.getCols();
 		boolean cellHighlighted = false;
 
-		grid = new Cell[rows][cols];
-		for (int r = 0; r < rows; ++r)
-			for (int c = 0; c < cols; ++c)
-				grid[r][c] = new Cell(main, group);
-
-		setCellLocations();
+		grid = new Grid(main);
 		quantities = new Quantifier(grid);
 		keyEventHandler.setGrid(grid);
 
-		for (int i = Elements.firstKey(); i <= Elements.lastKey(); i = Elements.nextKey(i)) {
-			if (!Elements.isKeyValid(i)) {
-				continue;
-			}
-			ElementConfig e = Elements.element(i);
-			int r;
-			int c;
-			if (e.getPeriod() != 0) {
-				if (e.getGroup() != 0) {
-					r = (e.getPeriod()-1);
-					c = (e.getGroup()-1);
-				} else {
-					r = (e.getPeriod()+2);
-					c = (e.getGroup32()-1);
-				}
-				Cell cell = grid[r][c];
-				cell.setE(e);
-				cell.setState(findState(e));
+		for (int r = 0; r < rows; ++r) {
+			for (int c = 0; c < cols; ++c) {
+				Cell cell = grid.getCell(r, c);
+
+				group.getChildren().add(cell.getBack());
+
+				if (cell.isBlank())
+					continue;
+
 				if (cellHighlighted == false) {
 					cellHighlighted = true;
 					selection.setPosition(r, c);
 					cell.setSelected(true);
 					main.setSelected(cell);
 				}
+
+				group.getChildren().addAll(cell.getZ(), cell.getSymbol());
 			}
 		}
+
+		updateState(main.getTemp());
 	}
 
-	/**
-	 * Determines whether the given element is solid, liquid or gas at the 
-	 * current temperature.
-	 * 
-	 * @param e the given element.
-	 * @return the state.
-	 */
-	private int findState(ElementConfig e) {
-		final float melt = e.getMelt();
-		final float boil = e.getBoil();
-		final float temp = main.getTemp();
-		if ((melt == 0) && (boil == 0))
-			return Model.UNDEFINED;
-
-		if (temp < melt)
-			return Model.SOLID;
-
-		if (temp < boil)
-			return Model.LIQUID;
-
-		return Model.GAS;
-	}
 
 	/**
 	 * Update the state for each element in the grid.
 	 */
-	public void updateState() {
-//		System.out.println("updateState()");
+	public void updateState(int temp) {
+//		System.out.println("PTable.updateState(" + temp + ")");
 
-		final int rows = grid.length;
-		final int cols = grid[0].length;
-
-		for (int r = 0; r < rows; ++r) {
-			for (int c = 0; c < cols; ++c) {
-				Cell cell = grid[r][c];
-				if (cell.isBlank())
-					continue;
-
-				cell.setState(findState(cell.getE()));
-			}
-		}
+		grid.updateState(temp);
 	}
 
-	/**
-	 * Draws all the cells in the current grid.
-	 */
-	public void drawTable() {
-//		System.out.println("drawTable()");
-
-		if (gridChanged) {
-			gridChanged = false;
-
-			setCellLocations();
-		}
-
-		final int rows = grid.length;
-		final int cols = grid[0].length;
-
-		for (int r = 0; r < rows; ++r) {
-			for (int c = 0; c < cols; ++c) {
-				Cell cell = grid[r][c];
-				cell.drawBackground();
-				cell.drawZ();
-				cell.drawSymbol();
-			}
-		}
-	}
-
-	/**
-	 * Sets the pixel location of each Cell based on the boarder size, tile 
-	 * size and position in grid.
-	 */
-	private void setCellLocations() {
-//		System.out.println("setCellPosition()");
-
-		final int border = main.getBorderSize();
-		final int step = main.getStepSize();
-		final int rows = grid.length;
-		final int cols = grid[0].length;
-
-		int[] rowOffsets = new int[rows];
-		int[] colOffsets = new int[cols];
-
-		int p = border;
-		for (int i = 0; i < rows; ++i) {
-			rowOffsets[i] = p;
-			p += step;
-		}
-		p = border;
-		for (int i = 0; i < cols; ++i) {
-			colOffsets[i] = p;
-			p += step;
-		}
-
-		for (int r = 0; r < rows; ++r) {
-			for (int c = 0; c < cols; ++c) {
-				final Cell cell = grid[r][c];
-				cell.setPosition(colOffsets[c], rowOffsets[r]);
-			}
-		}
-	}
 
 	/**
 	 * Updates the background of all Elements of the specified subcategory to 
@@ -242,19 +137,10 @@ public class PTable extends Stage {
 	 * 
 	 * @param subcategory with updated colour.
 	 */
-	public void setSubcategoryColour(int subcategory) {
+	public void setSubcategoryColour(int subcategory, Color colour) {
 //		System.out.println("setSubcategoryColour(subcategory = " + subcategory + ")");
 
-		final int rows = grid.length;
-		final int cols = grid[0].length;
-
-		for (int r = 0; r < rows; ++r) {
-			for (int c = 0; c < cols; ++c) {
-				final Cell cell = grid[r][c];
-				if (cell.getSubcategory() == subcategory)
-					cell.drawBackground();
-			}
-		}
+		grid.setSubcategoryColour(subcategory, colour);
 	}
 
 	/**
@@ -263,21 +149,10 @@ public class PTable extends Stage {
 	 * 
 	 * @param state with updated colour.
 	 */
-	public void setStateColour(int state) {
+	public void setStateColour(int state, Color colour) {
 //		System.out.println("setStateColour(state = " + state + ")");
 
-		final int rows = grid.length;
-		final int cols = grid[0].length;
-
-		for (int r = 0; r < rows; ++r) {
-			for (int c = 0; c < cols; ++c) {
-				final Cell cell = grid[r][c];
-				if (cell.getState() == state) {
-					cell.drawZ();
-					cell.drawSymbol();
-				}
-			}
-		}
+		grid.setStateColour(state, colour);
 	}
 
 	/**
@@ -285,43 +160,12 @@ public class PTable extends Stage {
 	 * all the Cells to the new grid and add new ones as necessary, move all 
 	 * the nodes to a new Group, then use it to resize the window.
 	 */
-	public void gridChange() {
-//		System.out.println("gridChange(rows = " + grid.length + " -> " + main.getRows() + ")");
-//		System.out.println("gridChange(rows = " + grid[0].length + " -> " + main.getCols() + ")");
-
-		gridChanged = true;
-		ChangeChecker rowCkr = new ChangeChecker(grid.length, main.getRows());
-		ChangeChecker colCkr = new ChangeChecker(grid[0].length, main.getCols());
+	public void gridChange(ChangeChecker rowCkr, ChangeChecker colCkr) {
+//		System.out.println("gridChange(rows = " + grid.getRows() + " -> " + main.getRows() + ")");
+//		System.out.println("gridChange(cols = " + grid.getCols() + " -> " + main.getCols() + ")");
 
 		if (!rowCkr.isChanged() && !colCkr.isChanged()) {
 			return;
-		}
-
-		Cell[][] newGrid = new Cell[rowCkr.getNewValue()][colCkr.getNewValue()];
-		Group newGroup = new Group();
-
-		int maxRow = rowCkr.getNewValue();
-		if (rowCkr.isIncreased())
-			maxRow = rowCkr.getOldValue();
-		for (int r = 0; r < maxRow; ++r) {
-			for (int c = 0; c < colCkr.getNewValue(); ++c) {
-				if (c < colCkr.getOldValue()) {
-					newGrid[r][c] = grid[r][c];
-					newGrid[r][c].setGroup(newGroup);
-				}
-				else {
-					newGrid[r][c] = new Cell(main, newGroup);
-				}
-			}
-		}
-
-		// Add new rows of empty cells if necessary.
-		if (rowCkr.isIncreased()) {
-			for (int r = maxRow; r < rowCkr.getNewValue(); ++r) {
-				for (int c = 0; c < colCkr.getNewValue(); ++c) {
-					newGrid[r][c] = new Cell(main, newGroup);
-				}
-			}
 		}
 
 		// Adjust highlighted cells, if necessary.
@@ -331,36 +175,43 @@ public class PTable extends Stage {
 			}
 		}
 
-		grid = newGrid;
 		quantities.setGrid(grid);
 		keyEventHandler.setGrid(grid);
-		group = newGroup;
-		scene = new Scene(group, main.getWidth(), main.getHeight());
-		setScene(scene);
+		moveGroup();
+	}
+
+	/**
+	 * Moves the nodes from the current Group to the given new Group and set 
+	 * the current Group to the new Group.
+	 * 
+	 * @param newGroup to move the nodes to.
+	 */
+	public void setGroup(Cell cell, Group newGroup) {
+//		System.out.println("setGroup()");
+
+		group.getChildren().removeAll(cell.getBack(), cell.getZ(), cell.getSymbol());
+
+//		group = newGroup;
+		newGroup.getChildren().add(cell.getBack());
+		if (!cell.isBlank())
+			newGroup.getChildren().addAll(cell.getZ(), cell.getSymbol());
 	}
 
 	/**
 	 * If the Tile or Border size is changed we move all the nodes to a new 
-	 * Group, then use it to resize the window. However, if gridChange() has 
-	 * just been called, it will already have done this, so we can abort.
+	 * Group, then use it to resize the window.
 	 */
-	public void sizeChange() {
+	public void moveGroup() {
 //		System.out.println("sizeChange(rows = " + main.getWidth() + " -> " + main.getHeight() + ")");
 
-		// If we've executed gridChange(), we don't need to rebuild the Group, 
-		// so abort.
-		if (gridChanged) {
-			return;
-		}
-
-		gridChanged = true;
-		final int rows = grid.length;
-		final int cols = grid[0].length;
+		final int rows = grid.getRows();
+		final int cols = grid.getCols();
 		Group newGroup = new Group();
 
 		for (int r = 0; r < rows; ++r) {
 			for (int c = 0; c < cols; ++c) {
-				grid[r][c].setGroup(newGroup);
+				Cell cell = grid.getCell(r, c);
+				setGroup(cell, newGroup);
 			}
 		}
 
@@ -370,48 +221,20 @@ public class PTable extends Stage {
 	}
 
 	/**
-	 * Reverses the order of the columns, then repositions the cells and 
-	 * redraws the grid.
+	 * Reverses the order of the columns and repositions the cells.
 	 */
-	public void flipColumns() {
-//		System.out.println("Flip Columns.");
-
-		selection.flipColumns(grid[0].length);
-
-		for (int row = 0; row < grid.length; row++) {
-			int length = grid[row].length;
-			int e = length - 1;
-			for (int col = 0; col < (length/2); col++, e--) {
-				Cell temp = grid[row][col];
-				grid[row][col] = grid[row][e];
-				grid[row][e] = temp;
-			}
-		}
-
-		gridChanged = true;	// Ensure that we update the cell positions.
-		drawTable();
+	public void flipColumns(int step, int brdr) {
+		grid.flipColumns();
+		selection.flipColumns(grid.getCols());
 	}
 
 	/**
-	 * Reverses the order of the rows, then repositions the cells and 
-	 * redraws the grid.
+	 * Reverses the order of the rows and then repositions the cells.
 	 */
-	public void flipRows() {
-//		System.out.println("Flip Rows.");
-
-		int e = grid.length - 1;
-		selection.flipRows(grid.length);
-
-		for (int row = 0; row < (grid.length/2); row++, e--) {
-			Cell[] temp = grid[row];
-			grid[row] = grid[e];
-			grid[e] = temp;
-		}
-
-		gridChanged = true;	// Ensure that we update the cell positions.
-		drawTable();
+	public void flipRows(int step, int brdr) {
+		grid.flipRows();
+		selection.flipRows(grid.getRows());
 	}
-
 
 	/**
 	 * Make the the current quantities accessible.
@@ -437,6 +260,13 @@ public class PTable extends Stage {
 		setTitle(title + action);
 	}
 
+	public Cell getCurrentCell() {
+		final int row = selection.getRow();
+		final int col = selection.getCol();
+
+		return grid.getCell(row, col);
+	}
+
 	/**
 	 * Highlight/unhighlight the currently selected cells.
 	 * 
@@ -444,7 +274,7 @@ public class PTable extends Stage {
 	 * 				is to be removed.
 	 */
 	public void highlightSelectedCells(boolean value) {
-//		System.out.println("setSelected(" + value + ")");
+//		System.out.println("highlightSelectedCells(" + value + ")");
 
 		final int topRow = selection.getTop();
 		final int bottomRow = selection.getBottom();
@@ -454,14 +284,13 @@ public class PTable extends Stage {
 		// Highlight sub grid.
 		for (int r = topRow; r <= bottomRow; ++r) {
 			for (int c = leftCol; c <= rightCol; ++c) {
-				grid[r][c].setSelected(value);
+				Cell cell = grid.getCell(r, c);
+				cell.setSelected(value);
 			}
 		}
 
 		// Update the Details tab display.
-		final int row = selection.getRow();
-		final int col = selection.getCol();
-		Cell cell = grid[row][col];
+		Cell cell = getCurrentCell();
 		if (!cell.isBlank())
 			main.setSelected(cell);
 	}
@@ -473,77 +302,22 @@ public class PTable extends Stage {
 	 */
 	public void moveSelection(KeyCode code) {
 
-		Cell[] temp;
-		final int topRow = selection.getTop();
-		final int bottomRow = selection.getBottom();
-		final int leftCol = selection.getLeft();
-		final int rightCol = selection.getRight();
+		if (grid.moveSelection(selection, code)) {
+//			drawTable();
 
-		switch (code) {
-		case UP:
-			temp = new Cell[rightCol+1];
-			for (int c = leftCol; c <= rightCol; ++c)
-				temp[c] = grid[topRow-1][c];
-
-			for (int r = topRow; r <= bottomRow; ++r)
-				for (int c = leftCol; c <= rightCol; ++c)
-					grid[r-1][c] = grid[r][c];
-
-			for (int c = leftCol; c <= rightCol; ++c)
-				grid[bottomRow][c] = temp[c];
-
-			break;
-
-		case DOWN:
-			temp = new Cell[rightCol+1];
-			for (int c = leftCol; c <= rightCol; ++c)
-				temp[c] = grid[bottomRow+1][c];
-
-			for (int r = bottomRow; r >= topRow; --r)
-				for (int c = leftCol; c <= rightCol; ++c)
-					grid[r+1][c] = grid[r][c];
-
-			for (int c = leftCol; c <= rightCol; ++c)
-				grid[topRow][c] = temp[c];
-
-			break;
-
-		case LEFT:
-			temp = new Cell[bottomRow+1];
-			for (int r = topRow; r <= bottomRow; ++r)
-				temp[r] = grid[r][leftCol-1];
-
-			for (int r = topRow; r <= bottomRow; ++r)
-				for (int c = leftCol; c <= rightCol; ++c)
-					grid[r][c-1] = grid[r][c];
-
-			for (int r = topRow; r <= bottomRow; ++r)
-				grid[r][rightCol] = temp[r];
-
-			break;
-
-		case RIGHT:
-			temp = new Cell[bottomRow+1];
-			for (int r = topRow; r <= bottomRow; ++r)
-				temp[r] = grid[r][rightCol+1];
-
-			for (int r = topRow; r <= bottomRow; ++r)
-				for (int c = rightCol; c >= leftCol; --c)
-					grid[r][c+1] = grid[r][c];
-
-			for (int r = topRow; r <= bottomRow; ++r)
-				grid[r][leftCol] = temp[r];
-
-			break;
-
-		default:
-//			System.out.println("Key handler (" + code.toString() + ", " + pressed + ")");
-			return;
+			quantities.clear();
 		}
+	}
 
-		gridChanged = true;
-		drawTable();
-		quantities.clear();
+
+	public void updateLayout(
+			ChangeChecker rowCkr, ChangeChecker colCkr, 
+			ChangeChecker tileCkr, ChangeChecker brdrCkr,
+			ChangeChecker tempCkr,
+			int ZFontSize, int symbolFontSize) {
+
+		if (grid.updateLayout(rowCkr, colCkr, tileCkr, brdrCkr, tempCkr, ZFontSize, symbolFontSize))
+			moveGroup();
 	}
 
 }

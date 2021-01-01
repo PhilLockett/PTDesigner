@@ -132,7 +132,7 @@ public class DetailsController {
 		datDetailsBoilingPoint.setText(String.valueOf(e.getBoil()));
 
 		lblDetailsState.setText("State (at " + String.valueOf(main.getTemp()) + "K):");
-		datDetailsState.setText(main.getStateString(cell.getState()));
+		datDetailsState.setText(main.getStateString(cell.getE()));
 
 		datDetailsSpecificHeat.setText(String.valueOf(e.getC()));
 		datDetailsElectronegativity.setText(String.valueOf(e.getX()));
