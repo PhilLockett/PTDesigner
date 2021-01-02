@@ -174,7 +174,7 @@ public class Grid {
 	 * @param subcategory with updated colour.
 	 * @param colour to update with.
 	 */
-	public void setSubcategoryColours(int subcategory, Color colour) {
+	public void setSubcategoryColour(int subcategory, Color colour) {
 //		System.out.println("setSubcategoryColour(subcategory = " + subcategory + ", " + colour.toString() + ")");
 
 		final int rows = grid.length;
@@ -198,7 +198,7 @@ public class Grid {
 	 * @param state with updated colour.
 	 * @param colour to update with.
 	 */
-	public void setStateColours(int state, Color colour) {
+	public void setStateColour(int state, Color colour) {
 //		System.out.println("setStateColour(state = " + state + ", " + colour.toString() + ")");
 
 		final int rows = grid.length;

@@ -184,7 +184,7 @@ public class MainController {
 
 		if (model.setSubcategoryString(index, text)) {
 			model.setSubcategoryColour(index, colour);
-			table.setSubcategoryColours(index, colour);
+			table.setSubcategoryColour(index, colour);
 
 			return true;
 		}
@@ -205,7 +205,7 @@ public class MainController {
 
 		if (model.setStateString(index, text)) {
 			model.setStateColour(index, colour);
-			table.setStateColours(index, colour);
+			table.setStateColour(index, colour);
 
 			return true;
 		}

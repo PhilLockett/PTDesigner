@@ -128,10 +128,10 @@ public class PTable extends Stage {
 	 * @param subcategory with updated colour.
 	 * @param colour to update with.
 	 */
-	public void setSubcategoryColours(int subcategory, Color colour) {
+	public void setSubcategoryColour(int subcategory, Color colour) {
 //		System.out.println("setSubcategoryColour(subcategory = " + subcategory + ")");
 
-		grid.setSubcategoryColours(subcategory, colour);
+		grid.setSubcategoryColour(subcategory, colour);
 	}
 
 	/**
@@ -141,10 +141,10 @@ public class PTable extends Stage {
 	 * @param state with updated colour.
 	 * @param colour to update with.
 	 */
-	public void setStateColours(int state, Color colour) {
+	public void setStateColour(int state, Color colour) {
 //		System.out.println("setStateColour(state = " + state + ")");
 
-		grid.setStateColours(state, colour);
+		grid.setStateColour(state, colour);
 	}
 
 	/**
