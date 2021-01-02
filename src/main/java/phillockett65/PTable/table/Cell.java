@@ -37,7 +37,7 @@ import phillockett65.PTable.elements.ElementConfig;
 public class Cell {
 
 	/**
-	 * These are attributes that are the same for all cells. They are updated 
+	 * These attributes are the same for all cells. They are updated 
 	 * exclusively by the model to keep them in sync. This approach removes 
 	 * the need to pass the same data to all cells.
 	 */
@@ -65,13 +65,12 @@ public class Cell {
 	}
 
 	/**
-	 * The attributes are specific to each object instance.
+	 * These attributes are specific to each object instance.
 	 */
 	private ElementConfig e;
 
 	private Color backCol;
 	private Color foreCol;
-//	private int state;
 	private boolean selected = false;
 
 	private Rectangle back;
@@ -229,6 +228,10 @@ public class Cell {
 		symbolText.setY(py);
 	}
 
+	/**
+	 * Set the dimensions of the Rectangle used as a background to the global 
+	 * tileSize.
+	 */
 	public void setBackgroundSize() {
 //		System.out.println("setTileSize()");
 
@@ -236,12 +239,23 @@ public class Cell {
 		back.setHeight(tileSize);
 	}
 
-	public void setBackgroundColour(Color backCol) {
+	/**
+	 * Note the background colour for this Cell. This may change if the 
+	 * subcategory colour is changed.
+	 * 
+	 * @param colour - the background colour to use.
+	 */
+	private void setBackgroundColour(Color colour) {
 //		System.out.println("setBackgroundColour(" + backCol.toString() + ")");
-		this.backCol = backCol;
+		backCol = colour;
 	}
 
-	public void updateBackground() {
+	/**
+	 * Set the colour of the Rectangle used as a background to the colour set
+	 * by setBackgroundColour(). The colour may be inverted if the cell is 
+	 * selected.
+	 */
+	private void updateBackground() {
 //		System.out.println("showBackground()");
 
 		Color colour = backCol;
@@ -252,9 +266,12 @@ public class Cell {
 	}
 
 	/**
-	 * Draw the background of the Tile using the current colour of the 
-	 * Subcategory of the Element, or UNKNOWN colour if no Element is 
-	 * associated with the cell.
+	 * Set up the background of the Tile to the Global size and using the 
+	 * supplied colour. The colour may be inverted if the cell is selected.
+	 * Note: the colour is derived from the Subcategory of the Element, or 
+	 * UNKNOWN colour if no Element is associated with the cell.
+	 * 
+	 * @param colour to set background to.
 	 */
 	public void setBackground(Color colour) {
 //		System.out.println("setBackground(" + colour.toString() + ")");
@@ -264,6 +281,10 @@ public class Cell {
 		updateBackground();
 	}
 
+	/**
+	 * Set the font size of the Text nodes used to display the Atomic Number 
+	 * and Symbol to the font size in the global descriptors.
+	 */
 	public void setFontSize() {
 //		System.out.println("setFontSize()");
 
@@ -274,13 +295,24 @@ public class Cell {
 		symbolText.setFont(Font.font("arial", FontWeight.BOLD, FontPosture.REGULAR, symbolDesc.getSizeInt()));
 	}
 
-	public void setForegroundColour(Color foreCol) {
+	/**
+	 * Note the foreground colour for this Cell. This may change if the 
+	 * state colour is changed or the temperature is changed.
+	 * 
+	 * @param colour - the foreground colour to use.
+	 */
+	private void setForegroundColour(Color colour) {
 //		System.out.println("setForegroundColour(" + foreCol.toString() + ")");
 
-		this.foreCol = foreCol;
+		foreCol = colour;
 	}
 
-	public void updateForeground() {
+	/**
+	 * Set the colour of the Text nodes used to display the Atomic Number and 
+	 * Symbol to the colour set by setForegroundColour(). The colour may be 
+	 * inverted if the cell is selected.
+	 */
+	private void updateForeground() {
 //		System.out.println("showForeground()");
 
 		if (isBlank())
@@ -293,6 +325,15 @@ public class Cell {
 		symbolText.setFill(colour);
 	}
 
+	/**
+	 * Set up the Text nodes used to display the Atomic Number and Symbol to 
+	 * the font size in the global descriptors and using the supplied colour. 
+	 * The colour may be inverted if the cell is selected.
+	 * Note: the colour is derived from the State of the Element at the 
+	 * current temperature.
+	 * 
+	 * @param colour to set foreground to.
+	 */
 	public void setForeground(Color colour) {
 //		System.out.println("setForeground(" + colour.toString() + ")");
 
@@ -302,15 +343,6 @@ public class Cell {
 		setFontSize();
 		setForegroundColour(colour);
 		updateForeground();
-	}
-
-	/**
-	 * Find out if the cell has been selected.
-	 * 
-	 * @return true if the cell has been selected, false otherwise.
-	 */
-	public boolean isSelected() {
-		return selected;
 	}
 
 	/**

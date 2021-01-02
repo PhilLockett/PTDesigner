@@ -133,8 +133,7 @@ public class Grid {
 				if (cell.isBlank())
 					continue;
 
-				cell.setForegroundColour(main.getStateColour(cell.getE()));
-				cell.updateForeground();
+				cell.setForeground(main.getStateColour(cell.getState()));
 			}
 		}
 	}
@@ -184,8 +183,7 @@ public class Grid {
 			for (int c = 0; c < cols; ++c) {
 				final Cell cell = grid[r][c];
 				if (cell.getSubcategory() == subcategory) {
-					cell.setBackgroundColour(colour);
-					cell.updateBackground();
+					cell.setBackground(colour);
 				}
 			}
 		}
@@ -208,8 +206,7 @@ public class Grid {
 			for (int c = 0; c < cols; ++c) {
 				final Cell cell = grid[r][c];
 				if (cell.getState() == state) {
-					cell.setForegroundColour(colour);
-					cell.updateForeground();
+					cell.setForeground(colour);
 				}
 			}
 		}
@@ -224,7 +221,7 @@ public class Grid {
 	 * @param colCkr	- Column count change.
 	 * @return true if changes were made, false otherwise.
 	 */
-	public boolean gridChange(ChangeChecker rowCkr, ChangeChecker colCkr) {
+	private boolean gridChange(ChangeChecker rowCkr, ChangeChecker colCkr) {
 //		System.out.println("gridChange(rows = " + grid.length + " -> " + main.getRows() + ")");
 //		System.out.println("gridChange(rows = " + grid[0].length + " -> " + main.getCols() + ")");
 
@@ -264,15 +261,10 @@ public class Grid {
 	}
 
 	/**
-	 * If the Tile or Border size is changed we move all the nodes to a new 
-	 * Group, then use it to resize the window. 
-	 * 
-	 * @param size			- New Tile size.
-	 * @param ZFontSize		- Atomic Number font size.
-	 * @param symbolFontSize - Symbol font size.
+	 * Apply the size change to the nodes in each Cell.
 	 */
-	public void sizeChange(int size, int ZFontSize, int symbolFontSize) {
-//		System.out.println("sizeChange(rows = " + main.getWidth() + " -> " + main.getHeight() + ")");
+	private void sizeChange() {
+//		System.out.println("sizeChange()");
 
 		final int rows = grid.length;
 		final int cols = grid[0].length;
@@ -323,7 +315,7 @@ public class Grid {
 
 		if (sizeChanged || gridChanged) {
 			if (sizeChanged)
-				sizeChange(tile, ZFontSize, symbolFontSize);
+				sizeChange();
 
 			setCellLocations();
 		}
