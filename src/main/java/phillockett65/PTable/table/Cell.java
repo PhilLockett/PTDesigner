@@ -31,20 +31,52 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import phillockett65.PTable.Model;
 import phillockett65.PTable.elements.ElementConfig;
 
 public class Cell {
 
+	/**
+	 * These are attributes that are the same for all cells. They are updated 
+	 * exclusively by the model to keep them in sync. This approach removes 
+	 * the need to pass the same data to all cells.
+	 */
+	private static int temp;
+	private static int tileSize;
+	private static Desc ZDesc;
+	private static Desc symbolDesc;
+
+	public static void setTemp(int temp) {
+		Cell.temp = temp;
+	}
+
+	public static void setTileSize(int size) {
+//		System.out.println("setTileSize(" + size + ")");
+
+		Cell.tileSize = size;
+	}
+
+	public static void setZDesc(Desc zDesc) {
+		Cell.ZDesc = zDesc;
+	}
+
+	public static void setSymbolDesc(Desc symbolDesc) {
+		Cell.symbolDesc = symbolDesc;
+	}
+
+	/**
+	 * The attributes are specific to each object instance.
+	 */
 	private ElementConfig e;
 
 	private Color backCol;
 	private Color foreCol;
-	private int state;
+//	private int state;
 	private boolean selected = false;
 
 	private Rectangle back;
-	private Text Z;
-	private Text symbol;
+	private Text ZText;
+	private Text symbolText;
 
 	/**
 	 * Constructor.
@@ -53,9 +85,9 @@ public class Cell {
 	 * @param group	- representing the objects that are used to display 
 	 *				  the PTable.
 	 */
-	public Cell(int size, Color colour) {
+	public Cell(Color colour) {
 		back = new Rectangle();
-		setBackground(size, colour);
+		setBackground(colour);
 	}
 
 	/**
@@ -64,23 +96,17 @@ public class Cell {
 	 * @param e the Element to associate with the cell.
 	 * @param foreCol - foreground colour, determined by the state .
 	 * @param backCol - background colour, determined by the subcategory.
-	 * @param ZFontSize - Atomic Number font size.
-	 * @param symbolFontSize - Symbol font size.
 	 */
-	public void setElement(ElementConfig e, Color foreCol, Color backCol, int ZFontSize, int symbolFontSize) {
+	public void setElement(ElementConfig e, Color foreCol, Color backCol) {
 		this.e = e;
 
 		setBackgroundColour(backCol);
 		updateBackground();
 
-		Z = new Text(String.valueOf(e.getZ()));
-		Z.setFont(Font.font("arial", FontWeight.NORMAL, FontPosture.REGULAR, ZFontSize));
+		ZText = new Text(String.valueOf(e.getZ()));
+		symbolText = new Text(e.getSymbol());
 
-		symbol = new Text(e.getSymbol());
-		symbol.setFont(Font.font("arial", FontWeight.BOLD, FontPosture.REGULAR, symbolFontSize));
-
-		setForegroundColour(foreCol);
-		updateForeground();
+		setForeground(foreCol);
 	}
 
 	/**
@@ -98,7 +124,7 @@ public class Cell {
 	 * @return the Atomic Number Text node.
 	 */
 	public Text getZ() {
-		return Z;
+		return ZText;
 	}
 
 	/**
@@ -107,7 +133,7 @@ public class Cell {
 	 * @return the Symbol Text node.
 	 */
 	public Text getSymbol() {
-		return symbol;
+		return symbolText;
 	}
 
 	/**
@@ -130,6 +156,30 @@ public class Cell {
 	}
 
 	/**
+	 * Determines whether the associated element is solid, liquid or gas at 
+	 * the current temperature.
+	 * 
+	 * @return the state.
+	 */
+	private int findState() {
+		if (isBlank())
+			return Model.UNDEFINED;
+
+		final float melt = e.getMelt();
+		final float boil = e.getBoil();
+		if ((melt == 0) && (boil == 0))
+			return Model.UNDEFINED;
+
+		if (temp < melt)
+			return Model.SOLID;
+
+		if (temp < boil)
+			return Model.LIQUID;
+
+		return Model.GAS;
+	}
+
+	/**
 	 * Get the state (solid, liquid or gas) of the associated element at the 
 	 * current temperature. The state is used to set the foreground colour.
 	 * 
@@ -137,18 +187,7 @@ public class Cell {
 	 */
 	public int getState() {
 //		System.out.println("getState()");
-		return state;
-	}
-
-	/**
-	 * Set the state (solid, liquid or gas) of the associated element at the 
-	 * current temperature. This is called whenever the temperature is changed.
-	 * 
-	 * @param state (solid, liquid or gas).
-	 */
-	public void setState(int state) {
-//		System.out.println("setState(" + state + ")");
-		this.state = state;
+		return findState();
 	}
 
 	/**
@@ -169,34 +208,32 @@ public class Cell {
 	 * 
 	 * @param x coordinate of tile position.
 	 * @param y coordinate of tile position.
-	 * @param ZDesc			- Atomic Number font descriptor.
-	 * @param symbolDesc	- Symbol font descriptor.
 	 */
-	public void setPosition(int x, int y, Desc ZDesc, Desc symbolDesc) {
+	public void setPosition(int x, int y) {
 		back.setX(x);
 		back.setY(y);
 
 		if (isBlank())
 			return;
 
-		final int tileSize = (int)back.getHeight();
-		final int width = (int)(Z.getLayoutBounds().getWidth());
+//		final int tileSize = (int)back.getHeight();
+		final int width = (int)(ZText.getLayoutBounds().getWidth());
 		int px = x + tileSize - width;
 		int py = y + ZDesc.getDy();
-		Z.setX(px); 
-		Z.setY(py);
+		ZText.setX(px); 
+		ZText.setY(py);
 
 		px = x + symbolDesc.getDx();
 		py = y + symbolDesc.getDy();
-		symbol.setX(px); 
-		symbol.setY(py);
-}
+		symbolText.setX(px); 
+		symbolText.setY(py);
+	}
 
-	public void setTileSize(int size) {
-//		System.out.println("setTileSize(" + size + ")");
+	public void setBackgroundSize() {
+//		System.out.println("setTileSize()");
 
-		back.setWidth(size);
-		back.setHeight(size);
+		back.setWidth(tileSize);
+		back.setHeight(tileSize);
 	}
 
 	public void setBackgroundColour(Color backCol) {
@@ -219,22 +256,22 @@ public class Cell {
 	 * Subcategory of the Element, or UNKNOWN colour if no Element is 
 	 * associated with the cell.
 	 */
-	public void setBackground(int size, Color colour) {
-//		System.out.println("setBackground(" + size + ", " + colour.toString() + ")");
+	public void setBackground(Color colour) {
+//		System.out.println("setBackground(" + colour.toString() + ")");
 
-		setTileSize(size);
+		setBackgroundSize();
 		setBackgroundColour(colour);
 		updateBackground();
 	}
 
-	public void setFontSize(int ZFontSize, int symbolFontSize) {
-//		System.out.println("setFontSize(" + ZFontSize + ", " + symbolFontSize + ")");
+	public void setFontSize() {
+//		System.out.println("setFontSize()");
 
 		if (isBlank())
 			return;
 
-		Z.setFont(Font.font("arial", FontWeight.NORMAL, FontPosture.REGULAR, ZFontSize));
-		symbol.setFont(Font.font("arial", FontWeight.BOLD, FontPosture.REGULAR, symbolFontSize));
+		ZText.setFont(Font.font("arial", FontWeight.NORMAL, FontPosture.REGULAR, ZDesc.getSizeInt()));
+		symbolText.setFont(Font.font("arial", FontWeight.BOLD, FontPosture.REGULAR, symbolDesc.getSizeInt()));
 	}
 
 	public void setForegroundColour(Color foreCol) {
@@ -252,17 +289,17 @@ public class Cell {
 		Color colour = foreCol;
 		if (selected)
 			colour = colour.invert();
-		Z.setFill(colour);
-		symbol.setFill(colour);
+		ZText.setFill(colour);
+		symbolText.setFill(colour);
 	}
 
-	public void setForeground(Color colour, int ZFontSize, int symbolFontSize) {
-//		System.out.println("setForeground(" + colour.toString() + ", " + ZFontSize + ", " + symbolFontSize + ")");
+	public void setForeground(Color colour) {
+//		System.out.println("setForeground(" + colour.toString() + ")");
 
 		if (isBlank())
 			return;
 
-		setFontSize(ZFontSize, symbolFontSize);
+		setFontSize();
 		setForegroundColour(colour);
 		updateForeground();
 	}

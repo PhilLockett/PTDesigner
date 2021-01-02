@@ -28,7 +28,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import phillockett65.PTable.ChangeChecker;
 import phillockett65.PTable.MainController;
-import phillockett65.PTable.Model;
 import phillockett65.PTable.elements.ElementConfig;
 import phillockett65.PTable.elements.Elements;
 
@@ -57,15 +56,12 @@ public class Grid {
 		final int rows = main.getRows();
 		final int cols = main.getCols();
 
-		final int size = main.getTileSize();
 		final Color back = main.getSubcategoryColour(0);
 		grid = new Cell[rows][cols];
 		for (int r = 0; r < rows; ++r)
 			for (int c = 0; c < cols; ++c)
-				grid[r][c] = new Cell(size, back);;
+				grid[r][c] = new Cell(back);;
 
-		final int ZFontSize = main.getZ().getSizeInt();
-		final int symbolFontSize = main.getSymbol().getSizeInt();
 		for (int i = Elements.firstKey(); i <= Elements.lastKey(); i = Elements.nextKey(i)) {
 			if (!Elements.isKeyValid(i)) {
 				continue;
@@ -84,7 +80,7 @@ public class Grid {
 				Cell cell = grid[r][c];
 				final Color foreCol = main.getStateColour(e);
 				final Color backCol = main.getSubcategoryColour(e.getSubcategory());
-				cell.setElement(e, foreCol, backCol, ZFontSize, symbolFontSize);
+				cell.setElement(e, foreCol, backCol);
 			}
 		}
 
@@ -121,30 +117,6 @@ public class Grid {
 	}
 
 	/**
-	 * Determines whether the given element is solid, liquid or gas at the 
-	 * given temperature.
-	 * 
-	 * @param e the given element.
-	 * @param temperature.
-	 * @return the state.
-	 */
-	private int findState(ElementConfig e, int temperature) {
-		final float melt = e.getMelt();
-		final float boil = e.getBoil();
-		final float temp = temperature;
-		if ((melt == 0) && (boil == 0))
-			return Model.UNDEFINED;
-
-		if (temp < melt)
-			return Model.SOLID;
-
-		if (temp < boil)
-			return Model.LIQUID;
-
-		return Model.GAS;
-	}
-
-	/**
 	 * Update the state for each element in the grid for the given temperature.
 	 * 
 	 * @param temp - the given temperature.
@@ -161,7 +133,6 @@ public class Grid {
 				if (cell.isBlank())
 					continue;
 
-				cell.setState(findState(cell.getE(), temp));
 				cell.setForegroundColour(main.getStateColour(cell.getE()));
 				cell.updateForeground();
 			}
@@ -174,7 +145,7 @@ public class Grid {
 	 * size and position in grid.
 	 */
 	private void setCellLocations() {
-//		System.out.println("setCellLocations(" + rows + ", " + cols + ", " + step + ", " + border + ")");
+//		System.out.println("setCellLocations()");
 
 		final int rows = grid.length;
 		final int cols = grid[0].length;
@@ -191,7 +162,7 @@ public class Grid {
 		for (int r = 0; r < rows; ++r) {
 			for (int c = 0; c < cols; ++c) {
 				final Cell cell = grid[r][c];
-				cell.setPosition(offsets[c], offsets[r], main.getZ(), main.getSymbol());
+				cell.setPosition(offsets[c], offsets[r]);
 			}
 		}
 	}
@@ -265,7 +236,6 @@ public class Grid {
 		final int cols = colCkr.getNewValue();
 		Cell[][] newGrid = new Cell[rows][cols];
 
-		final int size = main.getTileSize();
 		final Color back = main.getSubcategoryColour(0);
 
 		int maxRow = rows;
@@ -276,7 +246,7 @@ public class Grid {
 				if (c < colCkr.getOldValue())
 					newGrid[r][c] = grid[r][c];
 				else
-					newGrid[r][c] = new Cell(size, back);
+					newGrid[r][c] = new Cell(back);
 			}
 		}
 
@@ -284,7 +254,7 @@ public class Grid {
 		if (rowCkr.isIncreased()) {
 			for (int r = maxRow; r < rows; ++r)
 				for (int c = 0; c < cols; ++c)
-					newGrid[r][c] = new Cell(size, back);
+					newGrid[r][c] = new Cell(back);
 		}
 
 		grid = newGrid;
@@ -310,8 +280,8 @@ public class Grid {
 		for (int r = 0; r < rows; ++r) {
 			for (int c = 0; c < cols; ++c) {
 				Cell cell = grid[r][c];
-				cell.setTileSize(size);
-				cell.setFontSize(ZFontSize, symbolFontSize);
+				cell.setBackgroundSize();
+				cell.setFontSize();
 			}
 		}
 	}

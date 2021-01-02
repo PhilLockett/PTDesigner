@@ -27,6 +27,7 @@ package phillockett65.PTable;
 import javafx.scene.paint.Color;
 import phillockett65.PTable.elements.ElementConfig;
 import phillockett65.PTable.elements.Elements;
+import phillockett65.PTable.table.Cell;
 import phillockett65.PTable.table.Desc;
 
 public class Model {
@@ -49,15 +50,17 @@ public class Model {
 	public final static int NOBLE_GAS = 10;
 	public final static int MAX_SUBCATEGORY = 11;
 
-	public final static int TILE_SIZE = 50;
+	public final static int INIT_TEMP = 274;
+	public final static int INIT_TILE_SIZE = 50;
+	public final static int INIT_BORDER_SIZE = 2;
 
-	private int temp = 274;
+	private int temp;
 	private int maxTemp = 0;
 
 	private int rows = 10;
 	private int cols = 18;
 	private int tileSize;
-	private int borderSize = 2;
+	private int borderSize;
 
 	private Desc Z = new Desc();
 	private Desc symbol = new Desc();
@@ -95,9 +98,16 @@ public class Model {
 			subcategories[i] = new String(Elements.getSubcategory(i));
 		}
 
-		setTileSize(TILE_SIZE);
+		// Call the setters for these values here to ensure that Cell is kept 
+		// in sync.
+		setTemp(INIT_TEMP);
+		setTileSize(INIT_TILE_SIZE);
+		setBorderSize(INIT_BORDER_SIZE);
+
+		Cell.setZDesc(Z);
+		Cell.setSymbolDesc(symbol);
+
 		maxTemp = findMaxTemp();
-//		System.out.println("maxTemp = " + maxTemp);
 	}
 
 	/**
@@ -130,6 +140,7 @@ public class Model {
 	}
 	public void setTemp(int temp) {
 		this.temp = temp;
+		Cell.setTemp(temp);
 	}
 	public int getRows() {
 		return rows;
@@ -148,6 +159,7 @@ public class Model {
 	}
 	public void setTileSize(int tileSize) {
 		this.tileSize = tileSize;
+		Cell.setTileSize(tileSize);
 
 		Z.setSize((float)tileSize / 4F);
 		Z.setDx((int)((float)tileSize * 0.8));
