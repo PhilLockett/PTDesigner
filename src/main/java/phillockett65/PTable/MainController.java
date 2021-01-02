@@ -171,11 +171,20 @@ public class MainController {
 		return model.getSymbol();
 	}
 
+	/**
+	 * Called by the "Subcategory Settings" tab when the "Apply Change" button 
+	 * is clicked. Updates the model and the colours on the table.
+	 * 
+	 * @param index of the changed Subcategory.
+	 * @param text to use to describe the Subcategory.
+	 * @param colour to use for the Subcategory background colour.
+	 * @return true if the change was successful, false otherwise.
+	 */
 	public boolean updateSubcategory(int index, String text, Color colour) {
 
 		if (model.setSubcategoryString(index, text)) {
 			model.setSubcategoryColour(index, colour);
-			table.setSubcategoryColour(index, colour);
+			table.setSubcategoryColours(index, colour);
 
 			return true;
 		}
@@ -183,11 +192,20 @@ public class MainController {
 		return false;
 	}
 
+	/**
+	 * Called by the "State Settings" tab when the "Apply Change" button is 
+	 * clicked. Updates the model and the colours on the table.
+	 * 
+	 * @param index of the changed State.
+	 * @param text to use to describe the State.
+	 * @param colour to use for the State foreground colour.
+	 * @return true if the change was successful, false otherwise.
+	 */
 	public boolean updateState(int index, String text, Color colour) {
 
 		if (model.setStateString(index, text)) {
 			model.setStateColour(index, colour);
-			table.setStateColour(index, colour);
+			table.setStateColours(index, colour);
 
 			return true;
 		}
@@ -195,6 +213,19 @@ public class MainController {
 		return false;
 	}
 
+	/**
+	 * Called by the "Layout Settings" tab when the "Apply Change" button is 
+	 * clicked. Changes the layout of the grid and updates the model with the 
+	 * new data.
+	 * 
+	 * @param rowCkr		- Row count change.
+	 * @param colCkr		- Column count change.
+	 * @param tileCkr		- Tile size change.
+	 * @param brdrCkr		- Border size change.
+	 * @param tempCkr		- Temperature change.
+	 * @param ZFontSize		- Atomic Weight font size change.
+	 * @param symbolFontSize - Symbol font size change.
+	 */
 	public void updateLayout(int rows, int cols, int tile, int border, int temp) {
 		ChangeChecker rowCkr = new ChangeChecker(getRows(), rows);
 		if (rowCkr.isChanged())
@@ -216,9 +247,6 @@ public class MainController {
 		if (tempCkr.isChanged()) {
 			// Update model with temperature change.
 			model.setTemp(tempCkr.getNewValue());
-
-			// Update table with temperature change.
-			table.updateState(tempCkr.getNewValue());
 
 			// Update Details Tab with temperature change.
 			Cell cell = table.getCurrentCell();

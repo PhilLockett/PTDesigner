@@ -79,14 +79,9 @@ public class PTable extends Stage {
 		show();
 	}
 
-
-/************************************************************************
- * Table drawing support section.
- */
-
 	/**
-	 * Initializes the table by constructing the cells, initializes some 
-	 * globals and adds the Elements to the appropriate cells. 
+	 * Calls the grid constructor, initializes some globals and adds the nodes 
+	 * of the cells to the model. 
 	 */
 	private void initTable() {
 		final int rows = main.getRows();
@@ -117,19 +112,14 @@ public class PTable extends Stage {
 			}
 		}
 
-		updateState(main.getTemp());
+		grid.updateStates(main.getTemp());
 	}
 
 
-	/**
-	 * Update the state for each element in the grid.
-	 */
-	public void updateState(int temp) {
-//		System.out.println("PTable.updateState(" + temp + ")");
 
-		grid.updateState(temp);
-	}
-
+/************************************************************************
+ * Table drawing support section.
+ */
 
 	/**
 	 * Updates the background of all Elements of the specified subcategory to 
@@ -137,10 +127,10 @@ public class PTable extends Stage {
 	 * 
 	 * @param subcategory with updated colour.
 	 */
-	public void setSubcategoryColour(int subcategory, Color colour) {
+	public void setSubcategoryColours(int subcategory, Color colour) {
 //		System.out.println("setSubcategoryColour(subcategory = " + subcategory + ")");
 
-		grid.setSubcategoryColour(subcategory, colour);
+		grid.setSubcategoryColours(subcategory, colour);
 	}
 
 	/**
@@ -149,10 +139,10 @@ public class PTable extends Stage {
 	 * 
 	 * @param state with updated colour.
 	 */
-	public void setStateColour(int state, Color colour) {
+	public void setStateColours(int state, Color colour) {
 //		System.out.println("setStateColour(state = " + state + ")");
 
-		grid.setStateColour(state, colour);
+		grid.setStateColours(state, colour);
 	}
 
 	/**
@@ -181,17 +171,17 @@ public class PTable extends Stage {
 	}
 
 	/**
-	 * Moves the nodes from the current Group to the given new Group and set 
-	 * the current Group to the new Group.
+	 * Moves the nodes of the given cell from the current Group to the given 
+	 * new Group and set the current Group to the new Group.
 	 * 
+	 * @param cell the given cell.
 	 * @param newGroup to move the nodes to.
 	 */
-	public void setGroup(Cell cell, Group newGroup) {
+	private void setGroup(Cell cell, Group newGroup) {
 //		System.out.println("setGroup()");
 
 		group.getChildren().removeAll(cell.getBack(), cell.getZ(), cell.getSymbol());
 
-//		group = newGroup;
 		newGroup.getChildren().add(cell.getBack());
 		if (!cell.isBlank())
 			newGroup.getChildren().addAll(cell.getZ(), cell.getSymbol());
@@ -245,6 +235,39 @@ public class PTable extends Stage {
 		return quantities.getQuantities();
 	}
 
+	/**
+	 * Gets the cell that is considered the current cell by the selection.
+	 * 
+	 * @return the current cell.
+	 */
+	public Cell getCurrentCell() {
+		final int row = selection.getRow();
+		final int col = selection.getCol();
+
+		return grid.getCell(row, col);
+	}
+
+	/**
+	 * Change the layout of the grid.
+	 * 
+	 * @param rowCkr		- Row count change.
+	 * @param colCkr		- Column count change.
+	 * @param tileCkr		- Tile size change.
+	 * @param brdrCkr		- Border size change.
+	 * @param tempCkr		- Temperature change.
+	 * @param ZFontSize		- Atomic Weight font size change.
+	 * @param symbolFontSize - Symbol font size change.
+	 */
+	public void updateLayout(
+			ChangeChecker rowCkr, ChangeChecker colCkr, 
+			ChangeChecker tileCkr, ChangeChecker brdrCkr,
+			ChangeChecker tempCkr,
+			int ZFontSize, int symbolFontSize) {
+
+		if (grid.updateLayout(rowCkr, colCkr, tileCkr, brdrCkr, tempCkr, ZFontSize, symbolFontSize))
+			moveGroup();
+	}
+
 
 /************************************************************************
  * Key handling support code.
@@ -260,20 +283,13 @@ public class PTable extends Stage {
 		setTitle(title + action);
 	}
 
-	public Cell getCurrentCell() {
-		final int row = selection.getRow();
-		final int col = selection.getCol();
-
-		return grid.getCell(row, col);
-	}
-
 	/**
 	 * Highlight/unhighlight the currently selected cells.
 	 * 
-	 * @param value	true if cell is to be highlighted, false if highlighting 
-	 * 				is to be removed.
+	 * @param selected	true if cell is to be highlighted, false if  
+	 * 					highlighting is to be removed.
 	 */
-	public void highlightSelectedCells(boolean value) {
+	public void highlightSelectedCells(boolean selected) {
 //		System.out.println("highlightSelectedCells(" + value + ")");
 
 		final int topRow = selection.getTop();
@@ -285,7 +301,7 @@ public class PTable extends Stage {
 		for (int r = topRow; r <= bottomRow; ++r) {
 			for (int c = leftCol; c <= rightCol; ++c) {
 				Cell cell = grid.getCell(r, c);
-				cell.setSelected(value);
+				cell.setSelected(selected);
 			}
 		}
 
@@ -302,22 +318,8 @@ public class PTable extends Stage {
 	 */
 	public void moveSelection(KeyCode code) {
 
-		if (grid.moveSelection(selection, code)) {
-//			drawTable();
-
+		if (grid.moveSelection(selection, code))
 			quantities.clear();
-		}
-	}
-
-
-	public void updateLayout(
-			ChangeChecker rowCkr, ChangeChecker colCkr, 
-			ChangeChecker tileCkr, ChangeChecker brdrCkr,
-			ChangeChecker tempCkr,
-			int ZFontSize, int symbolFontSize) {
-
-		if (grid.updateLayout(rowCkr, colCkr, tileCkr, brdrCkr, tempCkr, ZFontSize, symbolFontSize))
-			moveGroup();
 	}
 
 }

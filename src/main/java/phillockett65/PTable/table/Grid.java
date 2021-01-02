@@ -19,8 +19,8 @@
  */
 
 /*
- * PTable is a class that is responsible for creating the Stage, drawing and 
- * redrawing the grid that represents the Periodic Table.
+ * Grid is a class that is responsible for managing the data that represents 
+ * the Periodic Table.
  */
 package phillockett65.PTable.table;
 
@@ -44,14 +44,14 @@ public class Grid {
 	 */
 	public Grid(MainController mainController) {
 		main = mainController;
-		initTable(main);
+		initGrid(main);
 	}
 
 	/**
-	 * Initializes the table by constructing the cells, initializes some 
-	 * globals and adds the Elements to the appropriate cells. 
+	 * Initializes the grid by constructing the cells, initializes some 
+	 * globals and adding the Elements to the appropriate cells. 
 	 */
-	private void initTable(MainController main) {
+	private void initGrid(MainController main) {
 		final int rows = main.getRows();
 		final int cols = main.getCols();
 
@@ -103,7 +103,7 @@ public class Grid {
 
 	/**
 	 * Determines whether the given element is solid, liquid or gas at the 
-	 * current temperature.
+	 * given temperature.
 	 * 
 	 * @param e the given element.
 	 * @param temperature.
@@ -130,7 +130,7 @@ public class Grid {
 	 * 
 	 * @param temp - the given temperature.
 	 */
-	public void updateState(int temp) {
+	public void updateStates(int temp) {
 //		System.out.println("Grid.updateState(" + temp + ")");
 
 		final int rows = grid.length;
@@ -184,7 +184,7 @@ public class Grid {
 	 * @param subcategory- with updated colour.
 	 * @param colour to update with.
 	 */
-	public void setSubcategoryColour(int subcategory, Color colour) {
+	public void setSubcategoryColours(int subcategory, Color colour) {
 //		System.out.println("setSubcategoryColour(subcategory = " + subcategory + ", " + colour.toString() + ")");
 
 		final int rows = grid.length;
@@ -207,7 +207,7 @@ public class Grid {
 	 * 
 	 * @param state with updated colour.
 	 */
-	public void setStateColour(int state, Color colour) {
+	public void setStateColours(int state, Color colour) {
 //		System.out.println("setStateColour(state = " + state + ", " + colour.toString() + ")");
 
 		final int rows = grid.length;
@@ -324,7 +324,7 @@ public class Grid {
 		}
 
 		if (tempCkr.isChanged())
-			updateState(tempCkr.getNewValue());
+			updateStates(tempCkr.getNewValue());
 
 		return (gridChanged || sizeChanged);
 	}
