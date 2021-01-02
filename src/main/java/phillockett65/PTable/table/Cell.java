@@ -20,7 +20,10 @@
 
 /*
  * Cell is a class that is responsible for drawing the tile that represents 
- * the chemical element on the table. 
+ * the chemical element on the table. The Tile includes a Rectangle node, 
+ * coloured to represent the chemical subcategory, for the background and two
+ * Text nodes, coloured to represent the the state (solid, liquid, gas), for 
+ * the Atomic Number and element symbol.
  * 
  */
 package phillockett65.PTable.table;
@@ -39,7 +42,7 @@ public class Cell {
 	/**
 	 * These attributes are the same for all cells. They are updated 
 	 * exclusively by the model to keep them in sync. This approach removes 
-	 * the need to pass the same data to all cells.
+	 * the need to repeatedly pass the same data to all cells.
 	 */
 	private static int temp;
 	private static int tileSize;
@@ -51,8 +54,6 @@ public class Cell {
 	}
 
 	public static void setTileSize(int size) {
-//		System.out.println("setTileSize(" + size + ")");
-
 		Cell.tileSize = size;
 	}
 
@@ -64,8 +65,9 @@ public class Cell {
 		Cell.symbolDesc = symbolDesc;
 	}
 
+
 	/**
-	 * These attributes are specific to each object instance.
+	 * These attributes are specific to each instance of a Cell object.
 	 */
 	private ElementConfig e;
 
@@ -80,9 +82,7 @@ public class Cell {
 	/**
 	 * Constructor.
 	 * 
-	 * @param mainController through which control is centralized.
-	 * @param group	- representing the objects that are used to display 
-	 *				  the PTable.
+	 * @param colour - background colour, determined by the subcategory.
 	 */
 	public Cell(Color colour) {
 		back = new Rectangle();
@@ -93,7 +93,7 @@ public class Cell {
 	 * Set the ElementConfig for this cell, include colours and font sizes.
 	 * 
 	 * @param e the Element to associate with the cell.
-	 * @param foreCol - foreground colour, determined by the state .
+	 * @param foreCol - foreground colour, determined by the state.
 	 * @param backCol - background colour, determined by the subcategory.
 	 */
 	public void setElement(ElementConfig e, Color foreCol, Color backCol) {
@@ -138,7 +138,7 @@ public class Cell {
 	/**
 	 * Get the associated element of this cell.
 	 * 
-	 * @return the associated element.
+	 * @return the associated element (may be null).
 	 */
 	public ElementConfig getE() {
 		return e;
@@ -215,7 +215,6 @@ public class Cell {
 		if (isBlank())
 			return;
 
-//		final int tileSize = (int)back.getHeight();
 		final int width = (int)(ZText.getLayoutBounds().getWidth());
 		int px = x + tileSize - width;
 		int py = y + ZDesc.getDy();
@@ -321,6 +320,7 @@ public class Cell {
 		Color colour = foreCol;
 		if (selected)
 			colour = colour.invert();
+
 		ZText.setFill(colour);
 		symbolText.setFill(colour);
 	}
@@ -346,7 +346,8 @@ public class Cell {
 	}
 
 	/**
-	 * Indicate whether a cell should be highlighted.
+	 * Indicate whether a cell should be highlighted. This notes the selected 
+	 * state and refreshes the Tile colour.
 	 * 
 	 * @param selected	- flag to indicate if the cell should be display as 
 	 *					  highlighted.
