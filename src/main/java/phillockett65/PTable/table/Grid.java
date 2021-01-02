@@ -49,7 +49,9 @@ public class Grid {
 
 	/**
 	 * Initializes the grid by constructing the cells, initializes some 
-	 * globals and adding the Elements to the appropriate cells. 
+	 * globals and adding the Elements to the appropriate cells.
+	 * 
+	 * @param main	- used to call the centralized controller.
 	 */
 	private void initGrid(MainController main) {
 		final int rows = main.getRows();
@@ -296,7 +298,7 @@ public class Grid {
 	 * Group, then use it to resize the window. 
 	 * 
 	 * @param size			- New Tile size.
-	 * @param ZFontSize		- Atomic Weight font size.
+	 * @param ZFontSize		- Atomic Number font size.
 	 * @param symbolFontSize - Symbol font size.
 	 */
 	public void sizeChange(int size, int ZFontSize, int symbolFontSize) {
@@ -322,7 +324,7 @@ public class Grid {
 	 * @param tileCkr		- Tile size change (in pixels).
 	 * @param brdrCkr		- Border size change (in pixels).
 	 * @param tempCkr		- Temperature change.
-	 * @param ZFontSize		- Atomic Weight font size.
+	 * @param ZFontSize		- Atomic Number font size.
 	 * @param symbolFontSize - Symbol font size.
 	 */
 	public boolean updateLayout(

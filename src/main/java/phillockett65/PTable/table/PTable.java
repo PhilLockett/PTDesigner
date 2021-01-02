@@ -195,7 +195,7 @@ public class PTable extends Stage {
 	 * @param tileCkr		- Tile size change (in pixels).
 	 * @param brdrCkr		- Border size change (in pixels).
 	 * @param tempCkr		- Temperature change.
-	 * @param ZFontSize		- Atomic Weight font size.
+	 * @param ZFontSize		- Atomic Number font size.
 	 * @param symbolFontSize - Symbol font size.
 	 */
 	public void updateLayout(

@@ -46,18 +46,6 @@ public class Cell {
 	private Text Z;
 	private Text symbol;
 
-	public Rectangle getBack() {
-		return back;
-	}
-
-	public Text getZ() {
-		return Z;
-	}
-
-	public Text getSymbol() {
-		return symbol;
-	}
-
 	/**
 	 * Constructor.
 	 * 
@@ -76,7 +64,7 @@ public class Cell {
 	 * @param e the Element to associate with the cell.
 	 * @param foreCol - foreground colour, determined by the state .
 	 * @param backCol - background colour, determined by the subcategory.
-	 * @param ZFontSize - Atomic Weight font size.
+	 * @param ZFontSize - Atomic Number font size.
 	 * @param symbolFontSize - Symbol font size.
 	 */
 	public void setElement(ElementConfig e, Color foreCol, Color backCol, int ZFontSize, int symbolFontSize) {
@@ -93,6 +81,33 @@ public class Cell {
 
 		setForegroundColour(foreCol);
 		updateForeground();
+	}
+
+	/**
+	 * Get the tile background Rectangle node.
+	 * 
+	 * @return the tile background node.
+	 */
+	public Rectangle getBack() {
+		return back;
+	}
+
+	/**
+	 * Get the Atomic Number Text node.
+	 * 
+	 * @return the Atomic Number Text node.
+	 */
+	public Text getZ() {
+		return Z;
+	}
+
+	/**
+	 * Get the Symbol Text node.
+	 * 
+	 * @return the Symbol Text node.
+	 */
+	public Text getSymbol() {
+		return symbol;
 	}
 
 	/**
@@ -154,7 +169,7 @@ public class Cell {
 	 * 
 	 * @param x coordinate of tile position.
 	 * @param y coordinate of tile position.
-	 * @param ZDesc			- Atomic Weight font descriptor.
+	 * @param ZDesc			- Atomic Number font descriptor.
 	 * @param symbolDesc	- Symbol font descriptor.
 	 */
 	public void setPosition(int x, int y, Desc ZDesc, Desc symbolDesc) {
