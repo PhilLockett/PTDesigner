@@ -136,7 +136,7 @@ public class Cell {
 	 * @return the state.
 	 */
 	public int getState() {
-//		System.out.println("getState(" + state + ")");
+//		System.out.println("getState()");
 		return state;
 	}
 
@@ -283,7 +283,7 @@ public class Cell {
 	 *					  highlighted.
 	 */
 	public void setSelected(boolean selected) {
-//		System.out.println("setSelected(" + selected + ", " + back.getX() + ", " + back.getY() + ")");
+//		System.out.println("setSelected(" + selected + ")");
 		this.selected = selected;
 		updateBackground();
 
