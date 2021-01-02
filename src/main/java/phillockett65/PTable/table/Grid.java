@@ -89,14 +89,31 @@ public class Grid {
 		setCellLocations();
 	}
 
+	/**
+	 * Get the specified Cell.
+	 * 
+	 * @param row of the required cell.
+	 * @param col of the required cell.
+	 * @return the specified Cell.
+	 */
 	public Cell getCell(int row, int col) {
 		return grid[row][col];
 	}
 
+	/**
+	 * Get the number of Rows in the grid.
+	 * 
+	 * @return the number of Rows in the grid.
+	 */
 	public int getRows() {
 		return grid.length;
 	}
 
+	/**
+	 * Get the number of Columns in the grid.
+	 * 
+	 * @return the number of Columns in the grid.
+	 */
 	public int getCols() {
 		return grid[0].length;
 	}
@@ -157,8 +174,8 @@ public class Grid {
 	private void setCellLocations() {
 //		System.out.println("setCellLocations(" + rows + ", " + cols + ", " + step + ", " + border + ")");
 
-		final int rows = main.getRows();
-		final int cols = main.getCols();
+		final int rows = grid.length;
+		final int cols = grid[0].length;
 		final int max = Math.max(rows, cols);
 		int[] offsets = new int[max];
 
@@ -181,7 +198,7 @@ public class Grid {
 	 * Updates the background of all Elements of the specified subcategory to 
 	 * the latest colour.
 	 * 
-	 * @param subcategory- with updated colour.
+	 * @param subcategory with updated colour.
 	 * @param colour to update with.
 	 */
 	public void setSubcategoryColours(int subcategory, Color colour) {
@@ -206,6 +223,7 @@ public class Grid {
 	 * latest colour.
 	 * 
 	 * @param state with updated colour.
+	 * @param colour to update with.
 	 */
 	public void setStateColours(int state, Color colour) {
 //		System.out.println("setStateColour(state = " + state + ", " + colour.toString() + ")");
@@ -229,8 +247,8 @@ public class Grid {
 	 * all the Cells to the new grid and add new ones as necessary, then 
 	 * update the cell locations. 
 	 * 
-	 * @param rowCkr - changes to the number of rows.
-	 * @param colCkr - changes to the number of columns.
+	 * @param rowCkr	- Row count change.
+	 * @param colCkr	- Column count change.
 	 * @return true if changes were made, false otherwise.
 	 */
 	public boolean gridChange(ChangeChecker rowCkr, ChangeChecker colCkr) {
@@ -276,6 +294,10 @@ public class Grid {
 	/**
 	 * If the Tile or Border size is changed we move all the nodes to a new 
 	 * Group, then use it to resize the window. 
+	 * 
+	 * @param size			- New Tile size.
+	 * @param ZFontSize		- Atomic Weight font size.
+	 * @param symbolFontSize - Symbol font size.
 	 */
 	public void sizeChange(int size, int ZFontSize, int symbolFontSize) {
 //		System.out.println("sizeChange(rows = " + main.getWidth() + " -> " + main.getHeight() + ")");
@@ -292,6 +314,17 @@ public class Grid {
 		}
 	}
 
+	/**
+	 * Change the layout of the grid.
+	 * 
+	 * @param rowCkr		- Row count change.
+	 * @param colCkr		- Column count change.
+	 * @param tileCkr		- Tile size change (in pixels).
+	 * @param brdrCkr		- Border size change (in pixels).
+	 * @param tempCkr		- Temperature change.
+	 * @param ZFontSize		- Atomic Weight font size.
+	 * @param symbolFontSize - Symbol font size.
+	 */
 	public boolean updateLayout(
 			ChangeChecker rowCkr, ChangeChecker colCkr, 
 			ChangeChecker tileCkr, ChangeChecker brdrCkr,

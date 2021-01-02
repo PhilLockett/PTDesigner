@@ -218,15 +218,13 @@ public class MainController {
 	 * clicked. Changes the layout of the grid and updates the model with the 
 	 * new data.
 	 * 
-	 * @param rowCkr		- Row count change.
-	 * @param colCkr		- Column count change.
-	 * @param tileCkr		- Tile size change.
-	 * @param brdrCkr		- Border size change.
-	 * @param tempCkr		- Temperature change.
-	 * @param ZFontSize		- Atomic Weight font size change.
-	 * @param symbolFontSize - Symbol font size change.
+	 * @param rows	- Row count.
+	 * @param cols	- Column count.
+	 * @param tile	- Tile size (in pixels).
+	 * @param brdr	- Border size (in pixels).
+	 * @param temp	- Temperature.
 	 */
-	public void updateLayout(int rows, int cols, int tile, int border, int temp) {
+	public void updateLayout(int rows, int cols, int tile, int brdr, int temp) {
 		ChangeChecker rowCkr = new ChangeChecker(getRows(), rows);
 		if (rowCkr.isChanged())
 			model.setRows(rowCkr.getNewValue());
@@ -239,7 +237,7 @@ public class MainController {
 		if (tileCkr.isChanged())
 			model.setTileSize(tileCkr.getNewValue());
 
-		ChangeChecker brdrCkr = new ChangeChecker(getBorderSize(), border);
+		ChangeChecker brdrCkr = new ChangeChecker(getBorderSize(), brdr);
 		if (brdrCkr.isChanged())
 			model.setBorderSize(brdrCkr.getNewValue());
 
@@ -264,14 +262,14 @@ public class MainController {
 	 * Reverses the order of the columns and repositions the cells.
 	 */
 	public void flipColumns() {
-		table.flipColumns(model.getStepSize(), model.getBorderSize());
+		table.flipColumns();
 	}
 
 	/**
 	 * Reverses the order of the rows and then repositions the cells.
 	 */
 	public void flipRows() {
-		table.flipRows(model.getStepSize(), model.getBorderSize());
+		table.flipRows();
 	}
 
 	public Quantities getQuantities() {

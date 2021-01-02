@@ -126,6 +126,7 @@ public class PTable extends Stage {
 	 * the latest colour.
 	 * 
 	 * @param subcategory with updated colour.
+	 * @param colour to update with.
 	 */
 	public void setSubcategoryColours(int subcategory, Color colour) {
 //		System.out.println("setSubcategoryColour(subcategory = " + subcategory + ")");
@@ -138,36 +139,12 @@ public class PTable extends Stage {
 	 * latest colour.
 	 * 
 	 * @param state with updated colour.
+	 * @param colour to update with.
 	 */
 	public void setStateColours(int state, Color colour) {
 //		System.out.println("setStateColour(state = " + state + ")");
 
 		grid.setStateColours(state, colour);
-	}
-
-	/**
-	 * If the number of rows or columns is changed we create a new grid, move 
-	 * all the Cells to the new grid and add new ones as necessary, move all 
-	 * the nodes to a new Group, then use it to resize the window.
-	 */
-	public void gridChange(ChangeChecker rowCkr, ChangeChecker colCkr) {
-//		System.out.println("gridChange(rows = " + grid.getRows() + " -> " + main.getRows() + ")");
-//		System.out.println("gridChange(cols = " + grid.getCols() + " -> " + main.getCols() + ")");
-
-		if (!rowCkr.isChanged() && !colCkr.isChanged()) {
-			return;
-		}
-
-		// Adjust highlighted cells, if necessary.
-		if ((rowCkr.isDecreased()) || (colCkr.isDecreased())) {
-			if (selection.cropSelection(rowCkr.getNewValue(), colCkr.getNewValue())) {
-				highlightSelectedCells(true);
-			}
-		}
-
-		quantities.setGrid(grid);
-		keyEventHandler.setGrid(grid);
-		moveGroup();
 	}
 
 	/**
@@ -191,7 +168,7 @@ public class PTable extends Stage {
 	 * If the Tile or Border size is changed we move all the nodes to a new 
 	 * Group, then use it to resize the window.
 	 */
-	public void moveGroup() {
+	private void moveGroup() {
 //		System.out.println("sizeChange(rows = " + main.getWidth() + " -> " + main.getHeight() + ")");
 
 		final int rows = grid.getRows();
@@ -211,9 +188,30 @@ public class PTable extends Stage {
 	}
 
 	/**
+	 * Change the layout of the grid.
+	 * 
+	 * @param rowCkr		- Row count change.
+	 * @param colCkr		- Column count change.
+	 * @param tileCkr		- Tile size change (in pixels).
+	 * @param brdrCkr		- Border size change (in pixels).
+	 * @param tempCkr		- Temperature change.
+	 * @param ZFontSize		- Atomic Weight font size.
+	 * @param symbolFontSize - Symbol font size.
+	 */
+	public void updateLayout(
+			ChangeChecker rowCkr, ChangeChecker colCkr, 
+			ChangeChecker tileCkr, ChangeChecker brdrCkr,
+			ChangeChecker tempCkr,
+			int ZFontSize, int symbolFontSize) {
+
+		if (grid.updateLayout(rowCkr, colCkr, tileCkr, brdrCkr, tempCkr, ZFontSize, symbolFontSize))
+			moveGroup();
+	}
+
+	/**
 	 * Reverses the order of the columns and repositions the cells.
 	 */
-	public void flipColumns(int step, int brdr) {
+	public void flipColumns() {
 		grid.flipColumns();
 		selection.flipColumns(grid.getCols());
 	}
@@ -221,7 +219,7 @@ public class PTable extends Stage {
 	/**
 	 * Reverses the order of the rows and then repositions the cells.
 	 */
-	public void flipRows(int step, int brdr) {
+	public void flipRows() {
 		grid.flipRows();
 		selection.flipRows(grid.getRows());
 	}
@@ -245,27 +243,6 @@ public class PTable extends Stage {
 		final int col = selection.getCol();
 
 		return grid.getCell(row, col);
-	}
-
-	/**
-	 * Change the layout of the grid.
-	 * 
-	 * @param rowCkr		- Row count change.
-	 * @param colCkr		- Column count change.
-	 * @param tileCkr		- Tile size change.
-	 * @param brdrCkr		- Border size change.
-	 * @param tempCkr		- Temperature change.
-	 * @param ZFontSize		- Atomic Weight font size change.
-	 * @param symbolFontSize - Symbol font size change.
-	 */
-	public void updateLayout(
-			ChangeChecker rowCkr, ChangeChecker colCkr, 
-			ChangeChecker tileCkr, ChangeChecker brdrCkr,
-			ChangeChecker tempCkr,
-			int ZFontSize, int symbolFontSize) {
-
-		if (grid.updateLayout(rowCkr, colCkr, tileCkr, brdrCkr, tempCkr, ZFontSize, symbolFontSize))
-			moveGroup();
 	}
 
 
