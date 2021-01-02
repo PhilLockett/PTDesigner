@@ -112,7 +112,7 @@ public class PTable extends Stage {
 			}
 		}
 
-		grid.updateStates(main.getTemp());
+		grid.updateStates();
 	}
 
 
@@ -195,16 +195,13 @@ public class PTable extends Stage {
 	 * @param tileCkr		- Tile size change (in pixels).
 	 * @param brdrCkr		- Border size change (in pixels).
 	 * @param tempCkr		- Temperature change.
-	 * @param ZFontSize		- Atomic Number font size.
-	 * @param symbolFontSize - Symbol font size.
 	 */
 	public void updateLayout(
 			ChangeChecker rowCkr, ChangeChecker colCkr, 
 			ChangeChecker tileCkr, ChangeChecker brdrCkr,
-			ChangeChecker tempCkr,
-			int ZFontSize, int symbolFontSize) {
+			ChangeChecker tempCkr) {
 
-		if (grid.updateLayout(rowCkr, colCkr, tileCkr, brdrCkr, tempCkr, ZFontSize, symbolFontSize))
+		if (grid.updateLayout(rowCkr, colCkr, tileCkr, brdrCkr, tempCkr))
 			moveGroup();
 	}
 

@@ -117,12 +117,11 @@ public class Grid {
 	}
 
 	/**
-	 * Update the state for each element in the grid for the given temperature.
-	 * 
-	 * @param temp - the given temperature.
+	 * Update the state for each element in the grid for the current global 
+	 * temperature.
 	 */
-	public void updateStates(int temp) {
-//		System.out.println("Grid.updateState(" + temp + ")");
+	public void updateStates() {
+//		System.out.println("Grid.updateState()");
 
 		final int rows = grid.length;
 		final int cols = grid[0].length;
@@ -286,14 +285,11 @@ public class Grid {
 	 * @param tileCkr		- Tile size change (in pixels).
 	 * @param brdrCkr		- Border size change (in pixels).
 	 * @param tempCkr		- Temperature change.
-	 * @param ZFontSize		- Atomic Number font size.
-	 * @param symbolFontSize - Symbol font size.
 	 */
 	public boolean updateLayout(
 			ChangeChecker rowCkr, ChangeChecker colCkr, 
 			ChangeChecker tileCkr, ChangeChecker brdrCkr,
-			ChangeChecker tempCkr,
-			int ZFontSize, int symbolFontSize) {
+			ChangeChecker tempCkr) {
 
 		boolean gridChanged = false;
 		boolean sizeChanged = false;
@@ -310,7 +306,6 @@ public class Grid {
 		if (brdrCkr.isChanged())
 			sizeChanged = true;
 
-		final int tile = tileCkr.getNewValue();
 		gridChanged = gridChange(rowCkr, colCkr);
 
 		if (sizeChanged || gridChanged) {
@@ -321,7 +316,7 @@ public class Grid {
 		}
 
 		if (tempCkr.isChanged())
-			updateStates(tempCkr.getNewValue());
+			updateStates();
 
 		return (gridChanged || sizeChanged);
 	}

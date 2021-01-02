@@ -253,9 +253,7 @@ public class MainController {
 		}
 
 		// Update the PTable.
-		final int ZFontSize = model.getZ().getSizeInt();
-		final int symbolFontSize = model.getSymbol().getSizeInt();
-		table.updateLayout(rowCkr, colCkr, tileCkr, brdrCkr, tempCkr, ZFontSize, symbolFontSize);
+		table.updateLayout(rowCkr, colCkr, tileCkr, brdrCkr, tempCkr);
 	}
 
 	/**
