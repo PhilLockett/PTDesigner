@@ -2,20 +2,22 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="400.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="phillockett65.PTable.StatusController">
    <children>
       <Button fx:id="btnStatusUpdate" layoutX="377.0" layoutY="318.0" mnemonicParsing="false" onAction="#btnStatusUpdateClicked" text="Update" />
-      <Label fx:id="lblStatusElementCount" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="20.0" prefHeight="17.0" prefWidth="270.0" style="-fx-font-weight: bold;" text="Element count:" />
-      <Label fx:id="datStatusElementCount" layoutX="290.0" layoutY="20.0" prefHeight="17.0" prefWidth="450.0" text="0.75" />
-      <Label fx:id="lblStatusNeighbourCount" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="40.0" prefHeight="17.0" prefWidth="270.0" style="-fx-font-weight: bold;" text="Neighbour count:" />
-      <Label fx:id="datStatusNeighbourCount" layoutX="290.0" layoutY="40.0" prefHeight="17.0" prefWidth="450.0" text="0.75" />
-      <Label fx:id="lblStatusElectronShell" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="60.0" prefHeight="17.0" prefWidth="270.0" style="-fx-font-weight: bold;" text="Electron shell similarity:" />
-      <Label fx:id="datStatusElectronShell" layoutX="290.0" layoutY="60.0" prefHeight="17.0" prefWidth="450.0" text="0.6" />
-      <Label fx:id="lblStatusElectronSubshell" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="80.0" prefHeight="17.0" prefWidth="270.0" style="-fx-font-weight: bold;" text="Electron subshell similarity:" />
-      <Label fx:id="datStatusElectronSubshell" layoutX="290.0" layoutY="80.0" prefHeight="17.0" prefWidth="450.0" text="0.5" />
-      <Label fx:id="lblStatusElectronConfig" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="100.0" prefHeight="17.0" prefWidth="270.0" style="-fx-font-weight: bold;" text="Electron configuration similarity:" />
-      <Label fx:id="datStatusElectronConfig" layoutX="290.0" layoutY="100.0" prefHeight="17.0" prefWidth="450.0" text="0.4" />
+      <TextArea layoutX="26.0" layoutY="14.0" prefHeight="98.0" prefWidth="700.0" text="These values attempt to assess the quality of the layout. “Element count” simply keeps a track on the current number of elements. “Neighbour count” is the total count of adjacent elements each element has. “Electron shell similarity”, “Electron subshell similarity” and “Electron configuration similarity” is an attempt to compare these values with each neighbour, creating a total for all elements and comparing that to the values of the original layout. These are expressed as a percentage change. A positive value indicates an improvement." wrapText="true" />
+      <Label fx:id="lblStatusElementCount" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="120.0" prefHeight="17.0" prefWidth="270.0" style="-fx-font-weight: bold;" text="Element count:" />
+      <Label fx:id="datStatusElementCount" layoutX="290.0" layoutY="120.0" prefHeight="17.0" prefWidth="450.0" text="0.75" />
+      <Label fx:id="lblStatusNeighbourCount" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="140.0" prefHeight="17.0" prefWidth="270.0" style="-fx-font-weight: bold;" text="Neighbour count:" />
+      <Label fx:id="datStatusNeighbourCount" layoutX="290.0" layoutY="140.0" prefHeight="17.0" prefWidth="450.0" text="0.75" />
+      <Label fx:id="lblStatusElectronShell" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="160.0" prefHeight="17.0" prefWidth="270.0" style="-fx-font-weight: bold;" text="Electron shell similarity: (% change)" />
+      <Label fx:id="datStatusElectronShell" layoutX="290.0" layoutY="160.0" prefHeight="17.0" prefWidth="450.0" text="0.6" />
+      <Label fx:id="lblStatusElectronSubshell" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="180.0" prefHeight="17.0" prefWidth="270.0" style="-fx-font-weight: bold;" text="Electron subshell similarity: (% change)" />
+      <Label fx:id="datStatusElectronSubshell" layoutX="290.0" layoutY="180.0" prefHeight="17.0" prefWidth="450.0" text="0.5" />
+      <Label fx:id="lblStatusElectronConfig" alignment="CENTER_RIGHT" layoutX="8.0" layoutY="200.0" prefHeight="17.0" prefWidth="270.0" style="-fx-font-weight: bold;" text="Electron configuration similarity: (% change)" />
+      <Label fx:id="datStatusElectronConfig" layoutX="290.0" layoutY="200.0" prefHeight="17.0" prefWidth="450.0" text="0.4" />
    </children>
 </AnchorPane>

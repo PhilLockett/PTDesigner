@@ -13,6 +13,14 @@
     -fx-background-color: #808080;
     -fx-background-radius: 12;
 }
+.text-area{
+    -fx-text-fill: white;
+}
+.content{
+    -fx-background-color: #383838;
+	-fx-border-color: #808080;
+	-fx-border-insets: 1;
+}
 
 .spinner{
     -fx-background-color: #383838;

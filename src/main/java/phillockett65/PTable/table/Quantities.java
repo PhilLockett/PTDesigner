@@ -48,17 +48,26 @@ public class Quantities {
 	public String getElectronShellSimilarity() {
 		return String.valueOf(electronShellSimilarity);
 	}
+	public String getElectronShellSimilarityPercent() {
+		return String.valueOf(electronShellSimilarity * 100);
+	}
 	public void setElectronShellSimilarity(float electronShellSimilarity) {
 		this.electronShellSimilarity = electronShellSimilarity;
 	}
 	public String getElectronSubshellSimilarity() {
 		return String.valueOf(electronSubshellSimilarity);
 	}
+	public String getElectronSubshellSimilarityPercent() {
+		return String.valueOf(electronSubshellSimilarity * 100);
+	}
 	public void setElectronSubshellSimilarity(float electronSubshellSimilarity) {
 		this.electronSubshellSimilarity = electronSubshellSimilarity;
 	}
 	public String getElectronConfigSimilarity() {
 		return String.valueOf(electronConfigSimilarity);
+	}
+	public String getElectronConfigSimilarityPercent() {
+		return String.valueOf(electronConfigSimilarity * 100);
 	}
 	public void setElectronConfigSimilarity(float electronConfigSimilarity) {
 		this.electronConfigSimilarity = electronConfigSimilarity;

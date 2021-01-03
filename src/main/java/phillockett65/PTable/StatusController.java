@@ -71,9 +71,9 @@ public class StatusController {
 		Quantities quantities = main.getQuantities();
 		datStatusElementCount.setText(quantities.getElementCount());
 		datStatusNeighbourCount.setText(quantities.getNeighbourCount());
-		datStatusElectronShell.setText(quantities.getElectronShellSimilarity());
-		datStatusElectronSubshell.setText(quantities.getElectronSubshellSimilarity());
-		datStatusElectronConfig.setText(quantities.getElectronConfigSimilarity());
+		datStatusElectronShell.setText(quantities.getElectronShellSimilarityPercent());
+		datStatusElectronSubshell.setText(quantities.getElectronSubshellSimilarityPercent());
+		datStatusElectronConfig.setText(quantities.getElectronConfigSimilarityPercent());
 	}
 
 	/**
