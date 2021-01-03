@@ -64,7 +64,7 @@ public class LytSettingsController {
 	 */
 	@FXML void btnSettingsFlipColumns(ActionEvent event) {
 //		System.out.println("Flip Columns.");
-	  main.flipColumns();
+		main.flipColumns();
 	}
 
 	/**
