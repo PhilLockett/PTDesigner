@@ -26,10 +26,67 @@
 package phillockett65.PTable.table;
 
 public class Selection {
+	private int rowCount;
+	private int colCount;
 	private int currentRow = 0;
 	private int currentCol = 0;
 	private int firstRow = 0;
 	private int firstCol = 0;
+
+	/**
+	 * Constructor. Sets the max limits.
+	 * 
+	 * @param rows	- Row count.
+	 * @param cols	- Column count.
+	 */
+	public Selection(int rows, int cols) {
+		rowCount = rows;
+		colCount = cols;
+	}
+
+	/**
+	 * Set row count and adjust selection to fit.
+	 * 
+	 * @param rows	- Row count.
+	 */
+	public void setRows(int rows) {
+		rowCount = rows;
+		if (currentRow >= rowCount)
+			currentRow = rowCount-1;
+		if (firstRow >= rowCount)
+			firstRow = rowCount-1;
+	}
+
+	/**
+	 * Set column count and adjust selection to fit.
+	 * 
+	 * @param cols	- Column count.
+	 */
+	public void setCols(int cols) {
+		colCount = cols;
+		if (currentCol >= colCount)
+			currentCol = colCount-1;
+		if (firstCol >= colCount)
+			firstCol = colCount-1;
+	}
+
+	/**
+	 * Get row count.
+	 * 
+	 * @return row count
+	 */
+	public int getRows() {
+		return rowCount;
+	}
+
+	/**
+	 * Get column count.
+	 * 
+	 * @return column count
+	 */
+	public int getCols() {
+		return colCount;
+	}
 
 	/**
 	 * Set the current position.

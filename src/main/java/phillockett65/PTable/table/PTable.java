@@ -64,13 +64,13 @@ public class PTable extends Stage {
 		resizableProperty().setValue(false);
 		setOnCloseRequest(e -> Platform.exit());
 
-		keyEventHandler = new KeyHandler(this);
-		selection = keyEventHandler.getSelection();
-		this.addEventHandler(KeyEvent.KEY_PRESSED, keyEventHandler);
-		this.addEventHandler(KeyEvent.KEY_RELEASED, keyEventHandler);
-
 		main = mainController;
 		group = new Group();
+
+		selection = new Selection(main.getRows(), main.getCols());
+		keyEventHandler = new KeyHandler(this, selection);
+		this.addEventHandler(KeyEvent.KEY_PRESSED, keyEventHandler);
+		this.addEventHandler(KeyEvent.KEY_RELEASED, keyEventHandler);
 
 		initTable();
 
@@ -90,7 +90,8 @@ public class PTable extends Stage {
 
 		grid = new Grid(main);
 		quantities = new Quantifier(grid);
-		keyEventHandler.setGrid(grid);
+		selection.setRows(rows);
+		selection.setCols(cols);
 
 		for (int r = 0; r < rows; ++r) {
 			for (int c = 0; c < cols; ++c) {
@@ -200,6 +201,18 @@ public class PTable extends Stage {
 			ChangeChecker rowCkr, ChangeChecker colCkr, 
 			ChangeChecker tileCkr, ChangeChecker brdrCkr,
 			ChangeChecker tempCkr) {
+
+		// Adjust the selection if the grid shrinks.
+		if (rowCkr.isChanged())
+			selection.setRows(rowCkr.getNewValue());
+		if (colCkr.isChanged())
+			selection.setCols(colCkr.getNewValue());
+
+		// Highlight the selection.
+		Cell cell = getCurrentCell();
+		cell.setSelected(true);
+		if (!cell.isBlank())
+			main.setSelected(cell);
 
 		if (grid.updateLayout(rowCkr, colCkr, tileCkr, brdrCkr, tempCkr))
 			moveGroup();

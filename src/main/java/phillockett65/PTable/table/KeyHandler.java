@@ -40,7 +40,6 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	private int action = NEITHER;
 
 	private PTable table;
-	private Grid grid;
 	private Selection selection;
 
 	private KeyState shift;
@@ -63,7 +62,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	 * 
 	 * @param table - the link to table.
 	 */
-	public KeyHandler(PTable table) {
+	public KeyHandler(PTable table, Selection sel) {
 //		System.out.println("KeyHandler constructed.");
 		this.table = table;
 
@@ -74,7 +73,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 		left = new KeyState();
 		right = new KeyState();
 
-		selection = new Selection();
+		selection = sel;
 
 		// Add Key to Command Mappings.
 		commands.put(KeyCode.SHIFT, () -> setShift());
@@ -83,24 +82,6 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 		commands.put(KeyCode.DOWN, () -> handleDown());
 		commands.put(KeyCode.LEFT, () -> handleLeft());
 		commands.put(KeyCode.RIGHT, () -> handleRight());
-	}
-
-	/**
-	 * Make the current user selection accessible.
-	 * 
-	 * @return the current user selection.
-	 */
-	public Selection getSelection() {
-		return selection;
-	}
-
-	/**
-	 * Set the grid for the key handler to navigate.
-	 * 
-	 * @param grid to navigate.
-	 */
-	public void setGrid(Grid grid) {
-		this.grid = grid;
 	}
 
 	/**
@@ -209,13 +190,13 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			return;		// Ignore key release.
 
 		if (action == MOVING) {
-			if (selection.getBottom() < grid.getRows()-1) {
+			if (selection.getBottom() < selection.getRows()-1) {
 				table.moveSelection(KeyCode.DOWN);
 				selection.moveDown();
 			}
 
 		} else {
-			if (selection.getRow() < grid.getRows()-1) {
+			if (selection.getRow() < selection.getRows()-1) {
 				table.highlightSelectedCells(false);
 				selection.positionDown();
 				saveCurrent();
@@ -263,13 +244,13 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			return;		// Ignore key release.
 
 		if (action == MOVING) {
-			if (selection.getRight() < grid.getCols()-1) {
+			if (selection.getRight() < selection.getCols()-1) {
 				table.moveSelection(KeyCode.RIGHT);
 				selection.moveRight();
 			}
 
 		} else {
-			if (selection.getCol() < grid.getCols()-1) {
+			if (selection.getCol() < selection.getCols()-1) {
 				table.highlightSelectedCells(false);
 				selection.positionRight();
 				saveCurrent();
