@@ -25,6 +25,9 @@
  */
 package phillockett65.PTable.table;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -47,6 +50,11 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	private KeyState left;
 	private KeyState right;
 
+	// Key->Command Map to handled key presses. Inspired by 
+	// https://programming.guide/java/function-pointers-in-java.html
+	boolean keyPressed = false;
+	private Map<KeyCode, Runnable> commands = new HashMap<>();
+
 	/**
 	 * Constructor.
 	 * 
@@ -67,10 +75,18 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 		right = new KeyState();
 
 		selection = new Selection();
+
+		// Add Key to Command Mappings.
+		commands.put(KeyCode.SHIFT, () -> setShift());
+		commands.put(KeyCode.CONTROL, () -> setControl());
+		commands.put(KeyCode.UP, () -> handleUp());
+		commands.put(KeyCode.DOWN, () -> handleDown());
+		commands.put(KeyCode.LEFT, () -> handleLeft());
+		commands.put(KeyCode.RIGHT, () -> handleRight());
 	}
 
 	/**
-	 * Make the the current user selection accessible.
+	 * Make the current user selection accessible.
 	 * 
 	 * @return the current user selection.
 	 */
@@ -109,12 +125,10 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 
 	/**
 	 * Update the shift state, the current action and the Window Title.
-	 * 
-	 * @param value - true if shift key is pressed, false otherwise.
 	 */
-	private void setShift(boolean value) {
-//		System.out.println("setShift(" + value + ")");
-		shift.setPressed(value);
+	private void setShift() {
+//		System.out.println("setShift(" + pressed + ")");
+		shift.setPressed(keyPressed);
 		if (shift.isPressed()) {
 			if (action == NEITHER) {
 				action = SELECTING;
@@ -130,12 +144,10 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 
 	/**
 	 * Update the control state, the current action and the Window Title.
-	 * 
-	 * @param value - true if control key is pressed, false otherwise.
 	 */
-	private void setControl(boolean value) {
-//		System.out.println("setControl(" + value + ")");
-		control.setPressed(value);
+	private void setControl() {
+//		System.out.println("setControl(" + pressed + ")");
+		control.setPressed(keyPressed);
 		if (control.isPressed()) {
 			if (action == NEITHER)
 				action = MOVING;
@@ -160,12 +172,10 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 
 	/**
 	 * Handle up arrow key.
-	 * 
-	 * @param value - true if up arrow key is pressed, false otherwise.
 	 */
-	private void handleUp(boolean value) {
-//		System.out.println("handleUp(" + value + ")");
-		if (!up.setPressed(value))
+	private void handleUp() {
+//		System.out.println("handleUp(" + pressed + ")");
+		if (!up.setPressed(keyPressed))
 			return;		// Ignore key repeat.
 
 		if (!up.isPressed())
@@ -189,12 +199,10 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 
 	/**
 	 * Handle down arrow key.
-	 * 
-	 * @param value - true if down arrow key is pressed, false otherwise.
 	 */
-	private void handleDown(boolean value) {
-//		System.out.println("handleDown(" + value + ")");
-		if (!down.setPressed(value))
+	private void handleDown() {
+//		System.out.println("handleDown(" + pressed + ")");
+		if (!down.setPressed(keyPressed))
 			return;		// Ignore key repeat.
 
 		if (!down.isPressed())
@@ -218,12 +226,10 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 
 	/**
 	 * Handle left arrow key.
-	 * 
-	 * @param value - true if left arrow key is pressed, false otherwise.
 	 */
-	private void handleLeft(boolean value) {
-//		System.out.println("handleLeft(" + value + ")");
-		if (!left.setPressed(value))
+	private void handleLeft() {
+//		System.out.println("handleLeft(" + pressed + ")");
+		if (!left.setPressed(keyPressed))
 			return;		// Ignore key repeat.
 
 		if (!left.isPressed())
@@ -247,12 +253,10 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 
 	/**
 	 * Handle right arrow key.
-	 * 
-	 * @param value - true if right arrow key is pressed, false otherwise.
 	 */
-	private void handleRight(boolean value) {
-//		System.out.println("handleRight(" + value + ")");
-		if (!right.setPressed(value))
+	private void handleRight() {
+//		System.out.println("handleRight(" + pressed + ")");
+		if (!right.setPressed(keyPressed))
 			return;		// Ignore key repeat.
 
 		if (!right.isPressed())
@@ -282,35 +286,9 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	 */
 	private void handleKey(KeyCode key, boolean pressed) {
 
-		switch (key) {
-		case UP:
-			handleUp(pressed);
-			break;
-
-		case DOWN:
-			handleDown(pressed);
-			break;
-
-		case LEFT:
-			handleLeft(pressed);
-			break;
-
-		case RIGHT:
-			handleRight(pressed);
-			break;
-
-		case SHIFT:
-			setShift(pressed);
-			break;
-
-		case CONTROL:
-			setControl(pressed);
-			break;
-
-		default:
-//			System.out.println("Key handler (" + code.toString() + ", " + pressed + ")");
-			break;
-		}
+		keyPressed = pressed;
+		if (commands.containsKey(key))
+			commands.get(key).run();
 	}
 
 	@Override
