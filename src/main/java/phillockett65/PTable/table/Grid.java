@@ -43,16 +43,14 @@ public class Grid {
 	 */
 	public Grid(MainController mainController) {
 		main = mainController;
-		initGrid(main);
+		initGrid();
 	}
 
 	/**
 	 * Initializes the grid by constructing the cells, initializes some 
 	 * globals and adding the Elements to the appropriate cells.
-	 * 
-	 * @param main	- used to call the centralized controller.
 	 */
-	private void initGrid(MainController main) {
+	private void initGrid() {
 		final int rows = main.getRows();
 		final int cols = main.getCols();
 
