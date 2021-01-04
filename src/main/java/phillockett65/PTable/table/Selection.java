@@ -299,40 +299,6 @@ public class Selection {
 	}
 
 	/**
-	 * Crop the edges of the selection if they fall outside of a grid that has 
-	 * been reduced in size.
-	 * 
-	 * @param rows - row count of the current grid. 
-	 * @param cols - column count of the current grid.
-	 * @return true if the selection was adjusted, false otherwise.
-	 */
-	public boolean cropSelection(int rows, int cols) {
-		boolean change = false;
-
-		rows--;
-		if (currentRow > rows) {
-			change = true;
-			currentRow = rows;
-		}
-		if (firstRow > rows) {
-			change = true;
-			firstRow = rows;
-		}
-
-		cols--;
-		if (currentCol > cols) {
-			change = true;
-			currentCol = cols;
-		}
-		if (firstCol > cols) {
-			change = true;
-			firstCol = cols;
-		}
-
-		return change;
-	}
-
-	/**
 	 * Generate a string version.
 	 */
 	public String toString() {
