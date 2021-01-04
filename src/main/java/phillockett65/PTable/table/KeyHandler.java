@@ -34,16 +34,9 @@ import javafx.scene.input.KeyEvent;
 
 public class KeyHandler implements EventHandler<KeyEvent> {
 
-	private final int NEITHER = 0;
-	private final int SELECTING = 1;
-	private final int MOVING = 2;
-	private int action = NEITHER;
-
 	private PTable table;
 	private Selection selection;
 
-	private KeyState shift;
-	private KeyState control;
 	private KeyState up;
 	private KeyState down;
 	private KeyState left;
@@ -51,6 +44,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 
 	// Key->Command Map to handled key presses. Inspired by 
 	// https://programming.guide/java/function-pointers-in-java.html
+	private KeyAction action;
 	private Map<KeyCode, Runnable> pressess;
 	private Map<KeyCode, Runnable> releases;
 
@@ -66,8 +60,6 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 //		System.out.println("KeyHandler constructed.");
 		this.table = table;
 
-		shift = new KeyState();
-		control = new KeyState();
 		up = new KeyState();
 		down = new KeyState();
 		left = new KeyState();
@@ -76,17 +68,19 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 		selection = sel;
 
 		// Add Key to Command Mappings.
+		action = new KeyAction();
+
 		pressess = new HashMap<>();
-		pressess.put(KeyCode.SHIFT, () -> setShift(true));
-		pressess.put(KeyCode.CONTROL, () -> setControl(true));
-		pressess.put(KeyCode.UP, () -> handleUp());
-		pressess.put(KeyCode.DOWN, () -> handleDown());
-		pressess.put(KeyCode.LEFT, () -> handleLeft());
-		pressess.put(KeyCode.RIGHT, () -> handleRight());
+		pressess.put(KeyCode.SHIFT, () -> setShift(action, true));
+		pressess.put(KeyCode.CONTROL, () -> setControl(action, true));
+		pressess.put(KeyCode.UP, () -> handleUp(action));
+		pressess.put(KeyCode.DOWN, () -> handleDown(action));
+		pressess.put(KeyCode.LEFT, () -> handleLeft(action));
+		pressess.put(KeyCode.RIGHT, () -> handleRight(action));
 
 		releases = new HashMap<>();
-		releases.put(KeyCode.SHIFT, () -> setShift(false));
-		releases.put(KeyCode.CONTROL, () -> setControl(false));
+		releases.put(KeyCode.SHIFT, () -> setShift(action, false));
+		releases.put(KeyCode.CONTROL, () -> setControl(action, false));
 		releases.put(KeyCode.UP, () -> upReleased());
 		releases.put(KeyCode.DOWN, () -> downReleased());
 		releases.put(KeyCode.LEFT, () -> leftReleased());
@@ -97,13 +91,13 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	 * Request PTable to update the Window Title to reflect the Shift and 
 	 * Control key states.
 	 */
-	private void updateTitle(int action) {
-		if (action == SELECTING) {
+	private void updateTitle(KeyAction action) {
+		if (action.isSelecting()) {
 			table.augmentTitle(" - MULTI SELECT");
 			return;
 		}
 
-		if (action == MOVING) {
+		if (action.isMoving()) {
 			table.augmentTitle(" - MOVE SELECTION");
 			return;
 		}
@@ -114,45 +108,26 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	/**
 	 * Update the shift state, the current action and the Window Title.
 	 */
-	private void setShift(boolean pressed) {
+	private void setShift(KeyAction action, boolean pressed) {
 //		System.out.println("setShift(" + pressed + ")");
-		shift.setPressed(pressed);
-		if (shift.isPressed()) {
-			if (action == NEITHER) {
-				action = SELECTING;
-			}
-		} else {
-			if (control.isPressed())
-				action = MOVING;
-			else
-				action = NEITHER;
-		}
+		action.setShift(pressed);
 		updateTitle(action);
 	}
 
 	/**
 	 * Update the control state, the current action and the Window Title.
 	 */
-	private void setControl(boolean pressed) {
+	private void setControl(KeyAction action, boolean pressed) {
 //		System.out.println("setControl(" + pressed + ")");
-		control.setPressed(pressed);
-		if (control.isPressed()) {
-			if (action == NEITHER)
-				action = MOVING;
-		} else {
-			if (shift.isPressed())
-				action = SELECTING;
-			else
-				action = NEITHER;
-		}
+		action.setControl(pressed);
 		updateTitle(action);
 	}
 
 	/**
-	 * Lock in the current position if we are not creatingt a selection.
+	 * Lock in the current position if we are not creating a selection.
 	 */
-	private void saveCurrent(int action) {
-		if (action == SELECTING)
+	private void saveCurrent(KeyAction action) {
+		if (action.isSelecting())
 			return;
 		selection.saveCurrent();
 	}
@@ -160,12 +135,12 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	/**
 	 * Handle up arrow key press.
 	 */
-	private void handleUp() {
+	private void handleUp(KeyAction action) {
 //		System.out.println("handleUp()");
 		if (!up.setPressed(true))
 			return;		// Ignore key repeat.
 
-		if (action == MOVING) {
+		if (action.isMoving()) {
 			if (selection.isMoveUp()) {
 				table.moveSelection(KeyCode.UP);
 				selection.moveUp();
@@ -191,12 +166,12 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	/**
 	 * Handle down arrow key press.
 	 */
-	private void handleDown() {
+	private void handleDown(KeyAction action) {
 //		System.out.println("handleDown()");
 		if (!down.setPressed(true))
 			return;		// Ignore key repeat.
 
-		if (action == MOVING) {
+		if (action.isMoving()) {
 			if (selection.isMoveDown()) {
 				table.moveSelection(KeyCode.DOWN);
 				selection.moveDown();
@@ -222,12 +197,12 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	/**
 	 * Handle left arrow key press.
 	 */
-	private void handleLeft() {
+	private void handleLeft(KeyAction action) {
 //		System.out.println("handleLeft()");
 		if (!left.setPressed(true))
 			return;		// Ignore key repeat.
 
-		if (action == MOVING) {
+		if (action.isMoving()) {
 			if (selection.isMoveLeft()) {
 				table.moveSelection(KeyCode.LEFT);
 				selection.moveLeft();
@@ -253,12 +228,12 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	/**
 	 * Handle right arrow key press.
 	 */
-	private void handleRight() {
+	private void handleRight(KeyAction action) {
 //		System.out.println("handleRight()");
 		if (!right.setPressed(true))
 			return;		// Ignore key repeat.
 
-		if (action == MOVING) {
+		if (action.isMoving()) {
 			if (selection.isMoveRight()) {
 				table.moveSelection(KeyCode.RIGHT);
 				selection.moveRight();
