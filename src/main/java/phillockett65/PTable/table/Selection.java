@@ -71,24 +71,6 @@ public class Selection {
 	}
 
 	/**
-	 * Get row count.
-	 * 
-	 * @return row count
-	 */
-	public int getRows() {
-		return rowCount;
-	}
-
-	/**
-	 * Get column count.
-	 * 
-	 * @return column count
-	 */
-	public int getCols() {
-		return colCount;
-	}
-
-	/**
 	 * Set the current position.
 	 * 
 	 * @param row - current row.
@@ -163,10 +145,28 @@ public class Selection {
 	}
 
 	/**
+	 * Determine if the current position can be moved up.
+	 * 
+	 * @return true if the current position can be moved, false otherwise.
+	 */
+	public boolean isPositionUp() {
+		return (currentRow > 0);
+	}
+
+	/**
 	 * Decrement the row of the current position.
 	 */
 	public void positionUp() {
 		currentRow--;
+	}
+
+	/**
+	 * Determine if the current position can be moved down.
+	 * 
+	 * @return true if the current position can be moved, false otherwise.
+	 */
+	public boolean isPositionDown() {
+		return (currentRow < rowCount-1);
 	}
 
 	/**
@@ -177,10 +177,28 @@ public class Selection {
 	}
 
 	/**
+	 * Determine if the current position can be moved left.
+	 * 
+	 * @return true if the current position can be moved, false otherwise.
+	 */
+	public boolean isPositionLeft() {
+		return (currentCol > 0);
+	}
+
+	/**
 	 * Decrement the column of the current position.
 	 */
 	public void positionLeft() {
 		currentCol--;
+	}
+
+	/**
+	 * Determine if the current position can be moved right.
+	 * 
+	 * @return true if the current position can be moved, false otherwise.
+	 */
+	public boolean isPositionRight() {
+		return (currentCol < colCount-1);
 	}
 
 	/**
@@ -191,19 +209,12 @@ public class Selection {
 	}
 
 	/**
-	 * Move current selection left.
+	 * Determine if the current selection can be moved up.
+	 * 
+	 * @return true if the current selection can be moved, false otherwise.
 	 */
-	public void moveLeft() {
-		firstCol--;
-		currentCol--;
-	}
-
-	/**
-	 * Move current selection right.
-	 */
-	public void moveRight() {
-		firstCol++;
-		currentCol++;
+	public boolean isMoveUp() {
+		return (getBottom() > 0);
 	}
 
 	/**
@@ -215,11 +226,54 @@ public class Selection {
 	}
 
 	/**
+	 * Determine if the current selection can be moved down.
+	 * 
+	 * @return true if the current selection can be moved, false otherwise.
+	 */
+	public boolean isMoveDown() {
+		return (getBottom() < rowCount-1);
+	}
+
+	/**
 	 * Move current selection down.
 	 */
 	public void moveDown() {
 		firstRow++;
 		currentRow++;
+	}
+
+	/**
+	 * Determine if the current selection can be moved left.
+	 * 
+	 * @return true if the current selection can be moved, false otherwise.
+	 */
+	public boolean isMoveLeft() {
+		return (getLeft() > 0);
+	}
+
+	/**
+	 * Move current selection left.
+	 */
+	public void moveLeft() {
+		firstCol--;
+		currentCol--;
+	}
+
+	/**
+	 * Determine if the current selection can be moved right.
+	 * 
+	 * @return true if the current selection can be moved, false otherwise.
+	 */
+	public boolean isMoveRight() {
+		return (getRight() < colCount-1);
+	}
+
+	/**
+	 * Move current selection right.
+	 */
+	public void moveRight() {
+		firstCol++;
+		currentCol++;
 	}
 
 	/**

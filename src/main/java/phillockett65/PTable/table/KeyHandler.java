@@ -163,13 +163,13 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			return;		// Ignore key release.
 
 		if (action == MOVING) {
-			if (selection.getBottom() > 0) {
+			if (selection.isMoveUp()) {
 				table.moveSelection(KeyCode.UP);
 				selection.moveUp();
 			}
 
 		} else {
-			if (selection.getRow() > 0) {
+			if (selection.isPositionUp()) {
 				table.highlightSelectedCells(false);
 				selection.positionUp();
 				saveCurrent();
@@ -190,13 +190,13 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			return;		// Ignore key release.
 
 		if (action == MOVING) {
-			if (selection.getBottom() < selection.getRows()-1) {
+			if (selection.isMoveDown()) {
 				table.moveSelection(KeyCode.DOWN);
 				selection.moveDown();
 			}
 
 		} else {
-			if (selection.getRow() < selection.getRows()-1) {
+			if (selection.isPositionDown()) {
 				table.highlightSelectedCells(false);
 				selection.positionDown();
 				saveCurrent();
@@ -217,13 +217,13 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			return;		// Ignore key release.
 
 		if (action == MOVING) {
-			if (selection.getLeft() > 0) {
+			if (selection.isMoveLeft()) {
 				table.moveSelection(KeyCode.LEFT);
 				selection.moveLeft();
 			}
 
 		} else {
-			if (selection.getCol() > 0) {
+			if (selection.isPositionLeft()) {
 				table.highlightSelectedCells(false);
 				selection.positionLeft();
 				saveCurrent();
@@ -244,13 +244,13 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			return;		// Ignore key release.
 
 		if (action == MOVING) {
-			if (selection.getRight() < selection.getCols()-1) {
+			if (selection.isMoveRight()) {
 				table.moveSelection(KeyCode.RIGHT);
 				selection.moveRight();
 			}
 
 		} else {
-			if (selection.getCol() < selection.getCols()-1) {
+			if (selection.isPositionRight()) {
 				table.highlightSelectedCells(false);
 				selection.positionRight();
 				saveCurrent();
