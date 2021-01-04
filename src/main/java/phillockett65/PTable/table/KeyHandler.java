@@ -51,8 +51,8 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 
 	// Key->Command Map to handled key presses. Inspired by 
 	// https://programming.guide/java/function-pointers-in-java.html
-	boolean keyPressed = false;
-	private Map<KeyCode, Runnable> commands = new HashMap<>();
+	private Map<KeyCode, Runnable> pressess;
+	private Map<KeyCode, Runnable> releases;
 
 	/**
 	 * Constructor.
@@ -76,40 +76,47 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 		selection = sel;
 
 		// Add Key to Command Mappings.
-		commands.put(KeyCode.SHIFT, () -> setShift());
-		commands.put(KeyCode.CONTROL, () -> setControl());
-		commands.put(KeyCode.UP, () -> handleUp());
-		commands.put(KeyCode.DOWN, () -> handleDown());
-		commands.put(KeyCode.LEFT, () -> handleLeft());
-		commands.put(KeyCode.RIGHT, () -> handleRight());
+		pressess = new HashMap<>();
+		pressess.put(KeyCode.SHIFT, () -> setShift(true));
+		pressess.put(KeyCode.CONTROL, () -> setControl(true));
+		pressess.put(KeyCode.UP, () -> handleUp());
+		pressess.put(KeyCode.DOWN, () -> handleDown());
+		pressess.put(KeyCode.LEFT, () -> handleLeft());
+		pressess.put(KeyCode.RIGHT, () -> handleRight());
+
+		releases = new HashMap<>();
+		releases.put(KeyCode.SHIFT, () -> setShift(false));
+		releases.put(KeyCode.CONTROL, () -> setControl(false));
+		releases.put(KeyCode.UP, () -> upReleased());
+		releases.put(KeyCode.DOWN, () -> downReleased());
+		releases.put(KeyCode.LEFT, () -> leftReleased());
+		releases.put(KeyCode.RIGHT, () -> rightReleased());
 	}
 
 	/**
 	 * Request PTable to update the Window Title to reflect the Shift and 
 	 * Control key states.
 	 */
-	private void updateTitle() {
-		switch (action) {
-		case SELECTING:
+	private void updateTitle(int action) {
+		if (action == SELECTING) {
 			table.augmentTitle(" - MULTI SELECT");
-			break;
-
-		case MOVING:
-			table.augmentTitle(" - MOVE SELECTION");
-			break;
-
-		default:
-			table.augmentTitle("");
-			break;
+			return;
 		}
+
+		if (action == MOVING) {
+			table.augmentTitle(" - MOVE SELECTION");
+			return;
+		}
+
+		table.augmentTitle("");
 	}
 
 	/**
 	 * Update the shift state, the current action and the Window Title.
 	 */
-	private void setShift() {
+	private void setShift(boolean pressed) {
 //		System.out.println("setShift(" + pressed + ")");
-		shift.setPressed(keyPressed);
+		shift.setPressed(pressed);
 		if (shift.isPressed()) {
 			if (action == NEITHER) {
 				action = SELECTING;
@@ -120,15 +127,15 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			else
 				action = NEITHER;
 		}
-		updateTitle();
+		updateTitle(action);
 	}
 
 	/**
 	 * Update the control state, the current action and the Window Title.
 	 */
-	private void setControl() {
+	private void setControl(boolean pressed) {
 //		System.out.println("setControl(" + pressed + ")");
-		control.setPressed(keyPressed);
+		control.setPressed(pressed);
 		if (control.isPressed()) {
 			if (action == NEITHER)
 				action = MOVING;
@@ -138,29 +145,25 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			else
 				action = NEITHER;
 		}
-		updateTitle();
+		updateTitle(action);
 	}
-
 
 	/**
 	 * Lock in the current position if we are not creatingt a selection.
 	 */
-	private void saveCurrent() {
+	private void saveCurrent(int action) {
 		if (action == SELECTING)
 			return;
 		selection.saveCurrent();
 	}
 
 	/**
-	 * Handle up arrow key.
+	 * Handle up arrow key press.
 	 */
 	private void handleUp() {
-//		System.out.println("handleUp(" + pressed + ")");
-		if (!up.setPressed(keyPressed))
+//		System.out.println("handleUp()");
+		if (!up.setPressed(true))
 			return;		// Ignore key repeat.
-
-		if (!up.isPressed())
-			return;		// Ignore key release.
 
 		if (action == MOVING) {
 			if (selection.isMoveUp()) {
@@ -172,22 +175,26 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			if (selection.isPositionUp()) {
 				table.highlightSelectedCells(false);
 				selection.positionUp();
-				saveCurrent();
+				saveCurrent(action);
 				table.highlightSelectedCells(true);
 			}
 		}
 	}
 
 	/**
-	 * Handle down arrow key.
+	 * Handle up arrow key release.
+	 */
+	private void upReleased() {
+		up.setPressed(false);
+	}
+
+	/**
+	 * Handle down arrow key press.
 	 */
 	private void handleDown() {
-//		System.out.println("handleDown(" + pressed + ")");
-		if (!down.setPressed(keyPressed))
+//		System.out.println("handleDown()");
+		if (!down.setPressed(true))
 			return;		// Ignore key repeat.
-
-		if (!down.isPressed())
-			return;		// Ignore key release.
 
 		if (action == MOVING) {
 			if (selection.isMoveDown()) {
@@ -199,22 +206,26 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			if (selection.isPositionDown()) {
 				table.highlightSelectedCells(false);
 				selection.positionDown();
-				saveCurrent();
+				saveCurrent(action);
 				table.highlightSelectedCells(true);
 			}
 		}
 	}
 
 	/**
-	 * Handle left arrow key.
+	 * Handle down arrow key release.
+	 */
+	private void downReleased() {
+		down.setPressed(false);
+	}
+
+	/**
+	 * Handle left arrow key press.
 	 */
 	private void handleLeft() {
-//		System.out.println("handleLeft(" + pressed + ")");
-		if (!left.setPressed(keyPressed))
+//		System.out.println("handleLeft()");
+		if (!left.setPressed(true))
 			return;		// Ignore key repeat.
-
-		if (!left.isPressed())
-			return;		// Ignore key release.
 
 		if (action == MOVING) {
 			if (selection.isMoveLeft()) {
@@ -226,22 +237,26 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			if (selection.isPositionLeft()) {
 				table.highlightSelectedCells(false);
 				selection.positionLeft();
-				saveCurrent();
+				saveCurrent(action);
 				table.highlightSelectedCells(true);
 			}
 		}
 	}
 
 	/**
-	 * Handle right arrow key.
+	 * Handle left arrow key release.
+	 */
+	private void leftReleased() {
+		left.setPressed(false);
+	}
+
+	/**
+	 * Handle right arrow key press.
 	 */
 	private void handleRight() {
-//		System.out.println("handleRight(" + pressed + ")");
-		if (!right.setPressed(keyPressed))
+//		System.out.println("handleRight()");
+		if (!right.setPressed(true))
 			return;		// Ignore key repeat.
-
-		if (!right.isPressed())
-			return;		// Ignore key release.
 
 		if (action == MOVING) {
 			if (selection.isMoveRight()) {
@@ -253,31 +268,30 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 			if (selection.isPositionRight()) {
 				table.highlightSelectedCells(false);
 				selection.positionRight();
-				saveCurrent();
+				saveCurrent(action);
 				table.highlightSelectedCells(true);
 			}
 		}
 	}
 
 	/**
-	 * Call the individual key handlers for the keys of interest.
-	 * 
-	 * @param key		- the KeyCode of the key pressed/released.
-	 * @param pressed	- true if key is pressed, false otherwise.
+	 * Handle right arrow key release.
 	 */
-	private void handleKey(KeyCode key, boolean pressed) {
-
-		keyPressed = pressed;
-		if (commands.containsKey(key))
-			commands.get(key).run();
+	private void rightReleased() {
+		right.setPressed(false);
 	}
 
 	@Override
 	public void handle(KeyEvent e) {
-		if (e.getEventType() == KeyEvent.KEY_PRESSED)
-			handleKey(e.getCode(), true);
-		if (e.getEventType() == KeyEvent.KEY_RELEASED)
-			handleKey(e.getCode(), false);
-	}
+		final KeyCode key = e.getCode();
 
+		if (e.getEventType() == KeyEvent.KEY_PRESSED)
+			if (pressess.containsKey(key))
+				pressess.get(key).run();
+
+		if (e.getEventType() == KeyEvent.KEY_RELEASED)
+			if (releases.containsKey(key))
+				releases.get(key).run();
+	}
+	
 }
