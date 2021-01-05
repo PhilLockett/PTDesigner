@@ -24,9 +24,30 @@
  */
 package phillockett65.PTable.table;
 
+import javafx.scene.input.KeyCode;
+
 public class KeyState {
 
 	private boolean pressed = false;
+	private final KeyCode key;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param keyCode the associated key code for this key state.
+	 */
+	public KeyState(KeyCode keyCode) {
+		key = keyCode;
+	}
+
+	/**
+	 * Get the associated key code.
+	 * 
+	 * @return the associated key code.
+	 */
+	public KeyCode getKey() {
+		return key;
+	}
 
 	/**
 	 * Get the current key press state.

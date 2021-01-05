@@ -60,10 +60,10 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 //		System.out.println("KeyHandler constructed.");
 		this.table = table;
 
-		up = new KeyState();
-		down = new KeyState();
-		left = new KeyState();
-		right = new KeyState();
+		up = new KeyState(KeyCode.UP);
+		down = new KeyState(KeyCode.DOWN);
+		left = new KeyState(KeyCode.LEFT);
+		right = new KeyState(KeyCode.RIGHT);
 
 		selection = sel;
 
@@ -73,18 +73,18 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 		pressess = new HashMap<>();
 		pressess.put(KeyCode.SHIFT, () -> setShift(true));
 		pressess.put(KeyCode.CONTROL, () -> setControl(true));
-		pressess.put(KeyCode.UP, () -> handleUp());
-		pressess.put(KeyCode.DOWN, () -> handleDown());
-		pressess.put(KeyCode.LEFT, () -> handleLeft());
-		pressess.put(KeyCode.RIGHT, () -> handleRight());
+		pressess.put(KeyCode.UP, () -> handlePressed(up));
+		pressess.put(KeyCode.DOWN, () -> handlePressed(down));
+		pressess.put(KeyCode.LEFT, () -> handlePressed(left));
+		pressess.put(KeyCode.RIGHT, () -> handlePressed(right));
 
 		releases = new HashMap<>();
 		releases.put(KeyCode.SHIFT, () -> setShift(false));
 		releases.put(KeyCode.CONTROL, () -> setControl(false));
-		releases.put(KeyCode.UP, () -> upReleased());
-		releases.put(KeyCode.DOWN, () -> downReleased());
-		releases.put(KeyCode.LEFT, () -> leftReleased());
-		releases.put(KeyCode.RIGHT, () -> rightReleased());
+		releases.put(KeyCode.UP, () -> handleReleased(up));
+		releases.put(KeyCode.DOWN, () -> handleReleased(down));
+		releases.put(KeyCode.LEFT, () -> handleReleased(left));
+		releases.put(KeyCode.RIGHT, () -> handleReleased(right));
 	}
 
 	/**
@@ -133,23 +133,24 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	}
 
 	/**
-	 * Handle up arrow key press.
+	 * Handle arrow key press.
 	 */
-	private void handleUp() {
+	private void handlePressed(KeyState key) {
 //		System.out.println("handleUp()");
-		if (!up.setPressed(true))
+		if (!key.setPressed(true))
 			return;		// Ignore key repeat.
 
+		final KeyCode direction =  key.getKey();
 		if (action.isMoving()) {
-			if (selection.isMoveUp()) {
-				table.moveSelection(KeyCode.UP);
-				selection.moveUp();
+			if (selection.isMove(direction)) {
+				table.moveSelection(direction);
+				selection.move(direction);
 			}
 
 		} else {
-			if (selection.isPositionUp()) {
+			if (selection.isPosition(direction)) {
 				table.highlightSelectedCells(false);
-				selection.positionUp();
+				selection.position(direction);
 				saveCurrent(action);
 				table.highlightSelectedCells(true);
 			}
@@ -157,104 +158,12 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	}
 
 	/**
-	 * Handle up arrow key release.
+	 * Handle arrow key release.
 	 */
-	private void upReleased() {
-		up.setPressed(false);
+	private void handleReleased(KeyState key) {
+		key.setPressed(false);
 	}
 
-	/**
-	 * Handle down arrow key press.
-	 */
-	private void handleDown() {
-//		System.out.println("handleDown()");
-		if (!down.setPressed(true))
-			return;		// Ignore key repeat.
-
-		if (action.isMoving()) {
-			if (selection.isMoveDown()) {
-				table.moveSelection(KeyCode.DOWN);
-				selection.moveDown();
-			}
-
-		} else {
-			if (selection.isPositionDown()) {
-				table.highlightSelectedCells(false);
-				selection.positionDown();
-				saveCurrent(action);
-				table.highlightSelectedCells(true);
-			}
-		}
-	}
-
-	/**
-	 * Handle down arrow key release.
-	 */
-	private void downReleased() {
-		down.setPressed(false);
-	}
-
-	/**
-	 * Handle left arrow key press.
-	 */
-	private void handleLeft() {
-//		System.out.println("handleLeft()");
-		if (!left.setPressed(true))
-			return;		// Ignore key repeat.
-
-		if (action.isMoving()) {
-			if (selection.isMoveLeft()) {
-				table.moveSelection(KeyCode.LEFT);
-				selection.moveLeft();
-			}
-
-		} else {
-			if (selection.isPositionLeft()) {
-				table.highlightSelectedCells(false);
-				selection.positionLeft();
-				saveCurrent(action);
-				table.highlightSelectedCells(true);
-			}
-		}
-	}
-
-	/**
-	 * Handle left arrow key release.
-	 */
-	private void leftReleased() {
-		left.setPressed(false);
-	}
-
-	/**
-	 * Handle right arrow key press.
-	 */
-	private void handleRight() {
-//		System.out.println("handleRight()");
-		if (!right.setPressed(true))
-			return;		// Ignore key repeat.
-
-		if (action.isMoving()) {
-			if (selection.isMoveRight()) {
-				table.moveSelection(KeyCode.RIGHT);
-				selection.moveRight();
-			}
-
-		} else {
-			if (selection.isPositionRight()) {
-				table.highlightSelectedCells(false);
-				selection.positionRight();
-				saveCurrent(action);
-				table.highlightSelectedCells(true);
-			}
-		}
-	}
-
-	/**
-	 * Handle right arrow key release.
-	 */
-	private void rightReleased() {
-		right.setPressed(false);
-	}
 
 	@Override
 	public void handle(KeyEvent e) {

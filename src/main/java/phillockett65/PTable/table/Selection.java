@@ -25,6 +25,8 @@
  */
 package phillockett65.PTable.table;
 
+import javafx.scene.input.KeyCode;
+
 public class Selection {
 	private int rowCount;
 	private int colCount;
@@ -144,136 +146,115 @@ public class Selection {
 		return currentCol;
 	}
 
+
 	/**
-	 * Determine if the current position can be moved up.
+	 * Determine if the current position can be moved in the given direction.
 	 * 
+	 * @param direction the current position is to be moved.
 	 * @return true if the current position can be moved, false otherwise.
 	 */
-	public boolean isPositionUp() {
-		return (currentRow > 0);
+	public boolean isPosition(KeyCode direction) {
+		switch (direction) {
+		case UP:
+			return (currentRow > 0);
+
+		case DOWN:
+			return (currentRow < rowCount-1);
+
+		case LEFT:
+			return (currentCol > 0);
+
+		case RIGHT:
+			return (currentCol < colCount-1);
+
+		default:
+			return false;
+		}
 	}
 
 	/**
-	 * Decrement the row of the current position.
-	 */
-	public void positionUp() {
-		currentRow--;
-	}
-
-	/**
-	 * Determine if the current position can be moved down.
+	 * Move the current position in the given direction.
 	 * 
-	 * @return true if the current position can be moved, false otherwise.
+	 * @param direction the current position is to be moved.
 	 */
-	public boolean isPositionDown() {
-		return (currentRow < rowCount-1);
+	public void position(KeyCode direction) {
+		switch (direction) {
+		case UP:
+			currentRow--;
+			break;
+
+		case DOWN:
+			currentRow++;
+			break;
+
+		case LEFT:
+			currentCol--;
+			break;
+
+		case RIGHT:
+			currentCol++;
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	/**
-	 * Increment the row of the current position.
-	 */
-	public void positionDown() {
-		currentRow++;
-	}
-
-	/**
-	 * Determine if the current position can be moved left.
+	 * Determine if the current selection can be moved in the given direction.
 	 * 
-	 * @return true if the current position can be moved, false otherwise.
-	 */
-	public boolean isPositionLeft() {
-		return (currentCol > 0);
-	}
-
-	/**
-	 * Decrement the column of the current position.
-	 */
-	public void positionLeft() {
-		currentCol--;
-	}
-
-	/**
-	 * Determine if the current position can be moved right.
-	 * 
-	 * @return true if the current position can be moved, false otherwise.
-	 */
-	public boolean isPositionRight() {
-		return (currentCol < colCount-1);
-	}
-
-	/**
-	 * Increment the column of the current position.
-	 */
-	public void positionRight() {
-		currentCol++;
-	}
-
-	/**
-	 * Determine if the current selection can be moved up.
-	 * 
+	 * @param direction the current selection is to be moved.
 	 * @return true if the current selection can be moved, false otherwise.
 	 */
-	public boolean isMoveUp() {
-		return (getBottom() > 0);
+	public boolean isMove(KeyCode direction) {
+		switch (direction) {
+		case UP:
+			return (getBottom() > 0);
+
+		case DOWN:
+			return (getBottom() < rowCount-1);
+
+		case LEFT:
+			return (getLeft() > 0);
+
+		case RIGHT:
+			return (getRight() < colCount-1);
+
+		default:
+			return false;
+		}
 	}
 
 	/**
-	 * Move current selection up.
-	 */
-	public void moveUp() {
-		firstRow--;
-		currentRow--;
-	}
-
-	/**
-	 * Determine if the current selection can be moved down.
+	 * Move the current selection in the given direction.
 	 * 
-	 * @return true if the current selection can be moved, false otherwise.
+	 * @param direction the current selection is to be moved.
 	 */
-	public boolean isMoveDown() {
-		return (getBottom() < rowCount-1);
-	}
+	public void move(KeyCode direction) {
+		switch (direction) {
+		case UP:
+			firstRow--;
+			currentRow--;
+			break;
 
-	/**
-	 * Move current selection down.
-	 */
-	public void moveDown() {
-		firstRow++;
-		currentRow++;
-	}
+		case DOWN:
+			firstRow++;
+			currentRow++;
+			break;
 
-	/**
-	 * Determine if the current selection can be moved left.
-	 * 
-	 * @return true if the current selection can be moved, false otherwise.
-	 */
-	public boolean isMoveLeft() {
-		return (getLeft() > 0);
-	}
+		case LEFT:
+			firstCol--;
+			currentCol--;
+			break;
 
-	/**
-	 * Move current selection left.
-	 */
-	public void moveLeft() {
-		firstCol--;
-		currentCol--;
-	}
+		case RIGHT:
+			firstCol++;
+			currentCol++;
+			break;
 
-	/**
-	 * Determine if the current selection can be moved right.
-	 * 
-	 * @return true if the current selection can be moved, false otherwise.
-	 */
-	public boolean isMoveRight() {
-		return (getRight() < colCount-1);
-	}
-
-	/**
-	 * Move current selection right.
-	 */
-	public void moveRight() {
-		firstCol++;
-		currentCol++;
+		default:
+			break;
+		}
 	}
 
 	/**
