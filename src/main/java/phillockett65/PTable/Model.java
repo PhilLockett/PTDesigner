@@ -98,8 +98,8 @@ public class Model {
 			subcategories[i] = new String(Elements.getSubcategory(i));
 		}
 
-		// Call the setters for these values here to ensure that Cell is kept 
-		// in sync.
+		// Call the setters for these values here to ensure that Cell Class 
+		// variables are kept in sync.
 		setTemp(INIT_TEMP);
 		setTileSize(INIT_TILE_SIZE);
 		setBorderSize(INIT_BORDER_SIZE);

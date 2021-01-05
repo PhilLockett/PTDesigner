@@ -54,7 +54,8 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	 * Responsible for creating the user selection and initializing the link 
 	 * back to table.
 	 * 
-	 * @param table - the link to table.
+	 * @param table	- the link to table.
+	 * @param sel	- the Selection made by the user.
 	 */
 	public KeyHandler(PTable table, Selection sel) {
 //		System.out.println("KeyHandler constructed.");
@@ -106,7 +107,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	}
 
 	/**
-	 * Update the shift state, the current action and the Window Title.
+	 * Use the shift state to update the current action and the Window Title.
 	 */
 	private void setShift(boolean pressed) {
 //		System.out.println("setShift(" + pressed + ")");
@@ -115,7 +116,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	}
 
 	/**
-	 * Update the control state, the current action and the Window Title.
+	 * Use the control state to update the current action and the Window Title.
 	 */
 	private void setControl(boolean pressed) {
 //		System.out.println("setControl(" + pressed + ")");
@@ -124,7 +125,9 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	}
 
 	/**
-	 * Lock in the current position if we are not creating a selection.
+	 * Move the current position unless we are creating a selection, in which 
+	 * case we leave it unchanged and use it as the non-moving point in a 
+	 * selection.
 	 */
 	private void saveCurrent(KeyAction action) {
 		if (action.isSelecting())

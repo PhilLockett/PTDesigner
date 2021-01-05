@@ -39,11 +39,11 @@ import phillockett65.PTable.elements.ElementConfig;
 
 public class Cell {
 
-	/**
-	 * These attributes are the same for all cells. They are updated 
-	 * exclusively by the model to keep them in sync. This approach removes 
-	 * the need to repeatedly pass the same data to all cells.
-	 */
+/*****************************************************************************
+ * These attributes are the same for all cells. They are updated exclusively
+ * by the model to keep them in sync. This approach removes the need to 
+ * repeatedly pass the same data to all cells.
+ */
 	private static int temp;
 	private static int tileSize;
 	private static Desc ZDesc;
@@ -66,9 +66,9 @@ public class Cell {
 	}
 
 
-	/**
-	 * These attributes are specific to each instance of a Cell object.
-	 */
+/*****************************************************************************
+ * These attributes are specific to each instance of a Cell object.
+ */
 	private ElementConfig e;
 
 	private Color backCol;
@@ -90,7 +90,7 @@ public class Cell {
 	}
 
 	/**
-	 * Set the ElementConfig for this cell, include colours and font sizes.
+	 * Set the ElementConfig and colours for this cell.
 	 * 
 	 * @param e the Element to associate with the cell.
 	 * @param foreCol - foreground colour, determined by the state.
@@ -202,8 +202,8 @@ public class Cell {
 	}
 
 	/**
-	 * Set the coordinates of the tile origin in pixels. Assumes that tile 
-	 * size has already been set as needed.
+	 * Set the coordinates of the tile origin in pixels. Uses the Class 
+	 * variable tile size and Atomic Number and Symbol descriptors..
 	 * 
 	 * @param x coordinate of tile position.
 	 * @param y coordinate of tile position.
@@ -228,8 +228,8 @@ public class Cell {
 	}
 
 	/**
-	 * Set the dimensions of the Rectangle used as a background to the global 
-	 * tileSize.
+	 * Set the dimensions of the Rectangle used as a background to the Class  
+	 * variable tileSize.
 	 */
 	public void setBackgroundSize() {
 //		System.out.println("setTileSize()");
@@ -265,8 +265,8 @@ public class Cell {
 	}
 
 	/**
-	 * Set up the background of the Tile to the Global size and using the 
-	 * supplied colour. The colour may be inverted if the cell is selected.
+	 * Set up the background Tile size and colour. The colour may be inverted 
+	 * if the cell is selected.
 	 * Note: the colour is derived from the Subcategory of the Element, or 
 	 * UNKNOWN colour if no Element is associated with the cell.
 	 * 
@@ -282,7 +282,7 @@ public class Cell {
 
 	/**
 	 * Set the font size of the Text nodes used to display the Atomic Number 
-	 * and Symbol to the font size in the global descriptors.
+	 * and Symbol to the font size in the Class variable descriptors.
 	 */
 	public void setFontSize() {
 //		System.out.println("setFontSize()");
@@ -327,8 +327,8 @@ public class Cell {
 
 	/**
 	 * Set up the Text nodes used to display the Atomic Number and Symbol to 
-	 * the font size in the global descriptors and using the supplied colour. 
-	 * The colour may be inverted if the cell is selected.
+	 * the font size in the Class variable descriptors and using the supplied 
+	 * colour. The colour may be inverted if the cell is selected.
 	 * Note: the colour is derived from the State of the Element at the 
 	 * current temperature.
 	 * 
