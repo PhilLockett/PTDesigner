@@ -155,38 +155,16 @@ public class Cell {
 	}
 
 	/**
-	 * Determines whether the associated element is solid, liquid or gas at 
-	 * the current temperature.
-	 * 
-	 * @return the state.
-	 */
-	private int findState() {
-		if (isBlank())
-			return Model.UNDEFINED;
-
-		final float melt = e.getMelt();
-		final float boil = e.getBoil();
-		if ((melt == 0) && (boil == 0))
-			return Model.UNDEFINED;
-
-		if (temp < melt)
-			return Model.SOLID;
-
-		if (temp < boil)
-			return Model.LIQUID;
-
-		return Model.GAS;
-	}
-
-	/**
 	 * Get the state (solid, liquid or gas) of the associated element at the 
 	 * current temperature. The state is used to set the foreground colour.
 	 * 
 	 * @return the state.
 	 */
 	public int getState() {
-//		System.out.println("getState()");
-		return findState();
+		if (isBlank())
+			return Model.UNDEFINED;
+
+		return Model.findState(e, temp);
 	}
 
 	/**

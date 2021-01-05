@@ -90,6 +90,30 @@ public class Model {
 		};
 
 	/**
+	 * Determines whether the given element is solid, liquid or gas at the 
+	 * given temperature.
+	 * 
+	 * @param e the given element.
+	 * @param temp the given temperature.
+	 * @return the state.
+	 */
+	public static int findState(ElementConfig e, float temp) {
+		final float melt = e.getMelt();
+		final float boil = e.getBoil();
+
+		if ((melt == 0) && (boil == 0))
+			return Model.UNDEFINED;
+
+		if (temp < melt)
+			return Model.SOLID;
+
+		if (temp < boil)
+			return Model.LIQUID;
+
+		return Model.GAS;
+	}
+
+	/**
 	 * Default Constructor.
 	 */
 	public Model() {
@@ -99,7 +123,8 @@ public class Model {
 		}
 
 		// Call the setters for these values here to ensure that Cell Class 
-		// variables are kept in sync.
+		// variables are kept in sync. This is only a problem if there are 
+		// multiple instances of the Model.
 		setTemp(INIT_TEMP);
 		setTileSize(INIT_TILE_SIZE);
 		setBorderSize(INIT_BORDER_SIZE);

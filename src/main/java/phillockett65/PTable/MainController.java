@@ -72,31 +72,9 @@ public class MainController {
 		statusTabController.updateSettings();
 	}
 
-	/**
-	 * Determines whether the given element is solid, liquid or gas at the 
-	 * current temperature.
-	 * 
-	 * @param e the given element.
-	 * @return the state.
-	 */
-	private int findState(ElementConfig e) {
-		final float melt = e.getMelt();
-		final float boil = e.getBoil();
-		final float temp = model.getTemp();
-		if ((melt == 0) && (boil == 0))
-			return Model.UNDEFINED;
-
-		if (temp < melt)
-			return Model.SOLID;
-
-		if (temp < boil)
-			return Model.LIQUID;
-
-		return Model.GAS;
-	}
-
 	public Color getStateColour(ElementConfig e) {
-		final int index = findState(e);
+		final float temp = model.getTemp();
+		final int index = Model.findState(e, temp);
 		Color ret = model.getStateColour(index);
 		return ret;
 	}
@@ -107,7 +85,8 @@ public class MainController {
 	}
 
 	public String getStateString(ElementConfig e) {
-		final int index = findState(e);
+		final float temp = model.getTemp();
+		final int index = Model.findState(e, temp);
 		String ret = model.getStateString(index);
 		return ret;
 	}
