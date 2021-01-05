@@ -209,7 +209,7 @@ public class Selection {
 	public boolean isMove(KeyCode direction) {
 		switch (direction) {
 		case UP:
-			return (getBottom() > 0);
+			return (getTop() > 0);
 
 		case DOWN:
 			return (getBottom() < rowCount-1);
