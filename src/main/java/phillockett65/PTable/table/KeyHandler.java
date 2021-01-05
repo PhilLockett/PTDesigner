@@ -71,16 +71,16 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 		action = new KeyAction();
 
 		pressess = new HashMap<>();
-		pressess.put(KeyCode.SHIFT, () -> setShift(action, true));
-		pressess.put(KeyCode.CONTROL, () -> setControl(action, true));
-		pressess.put(KeyCode.UP, () -> handleUp(action));
-		pressess.put(KeyCode.DOWN, () -> handleDown(action));
-		pressess.put(KeyCode.LEFT, () -> handleLeft(action));
-		pressess.put(KeyCode.RIGHT, () -> handleRight(action));
+		pressess.put(KeyCode.SHIFT, () -> setShift(true));
+		pressess.put(KeyCode.CONTROL, () -> setControl(true));
+		pressess.put(KeyCode.UP, () -> handleUp());
+		pressess.put(KeyCode.DOWN, () -> handleDown());
+		pressess.put(KeyCode.LEFT, () -> handleLeft());
+		pressess.put(KeyCode.RIGHT, () -> handleRight());
 
 		releases = new HashMap<>();
-		releases.put(KeyCode.SHIFT, () -> setShift(action, false));
-		releases.put(KeyCode.CONTROL, () -> setControl(action, false));
+		releases.put(KeyCode.SHIFT, () -> setShift(false));
+		releases.put(KeyCode.CONTROL, () -> setControl(false));
 		releases.put(KeyCode.UP, () -> upReleased());
 		releases.put(KeyCode.DOWN, () -> downReleased());
 		releases.put(KeyCode.LEFT, () -> leftReleased());
@@ -108,7 +108,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	/**
 	 * Update the shift state, the current action and the Window Title.
 	 */
-	private void setShift(KeyAction action, boolean pressed) {
+	private void setShift(boolean pressed) {
 //		System.out.println("setShift(" + pressed + ")");
 		action.setShift(pressed);
 		updateTitle(action);
@@ -117,7 +117,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	/**
 	 * Update the control state, the current action and the Window Title.
 	 */
-	private void setControl(KeyAction action, boolean pressed) {
+	private void setControl(boolean pressed) {
 //		System.out.println("setControl(" + pressed + ")");
 		action.setControl(pressed);
 		updateTitle(action);
@@ -135,7 +135,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	/**
 	 * Handle up arrow key press.
 	 */
-	private void handleUp(KeyAction action) {
+	private void handleUp() {
 //		System.out.println("handleUp()");
 		if (!up.setPressed(true))
 			return;		// Ignore key repeat.
@@ -166,7 +166,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	/**
 	 * Handle down arrow key press.
 	 */
-	private void handleDown(KeyAction action) {
+	private void handleDown() {
 //		System.out.println("handleDown()");
 		if (!down.setPressed(true))
 			return;		// Ignore key repeat.
@@ -197,7 +197,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	/**
 	 * Handle left arrow key press.
 	 */
-	private void handleLeft(KeyAction action) {
+	private void handleLeft() {
 //		System.out.println("handleLeft()");
 		if (!left.setPressed(true))
 			return;		// Ignore key repeat.
@@ -228,7 +228,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
 	/**
 	 * Handle right arrow key press.
 	 */
-	private void handleRight(KeyAction action) {
+	private void handleRight() {
 //		System.out.println("handleRight()");
 		if (!right.setPressed(true))
 			return;		// Ignore key repeat.
