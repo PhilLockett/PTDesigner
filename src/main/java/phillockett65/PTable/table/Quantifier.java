@@ -32,7 +32,6 @@ public class Quantifier {
 
 	private Grid grid;
 
-	private boolean upToDate = false;
 	private int elementCount = 0;
 	private int neighbourCount = 0;
 	private Deviation electronShellSimilarity;
@@ -46,7 +45,6 @@ public class Quantifier {
 	 */
 	public Quantifier(Grid grid) {
 		this.grid = grid;
-		clear();
 
 		electronShellSimilarity = new Deviation();
 		electronSubshellSimilarity = new Deviation();
@@ -60,14 +58,6 @@ public class Quantifier {
 	 */
 	public void setGrid(Grid grid) {
 		this.grid = grid;
-		clear();
-	}
-
-	/**
-	 * Invalidate the current values forcing a recalculation.
-	 */
-	public void clear() {
-		upToDate = false;
 	}
 
 	/**
@@ -135,7 +125,6 @@ public class Quantifier {
 		electronShellSimilarity.finalize();
 		electronSubshellSimilarity.finalize();
 		electronConfigSimilarity.finalize();
-		upToDate = true;
 	}
 
 	/**
@@ -197,8 +186,7 @@ public class Quantifier {
 	 * @return
 	 */
 	public Quantities getQuantities() {
-		if (!upToDate)
-			update();
+		update();
 
 		Quantities quantities = new Quantities();
 

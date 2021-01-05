@@ -305,8 +305,7 @@ public class PTable extends Stage {
 	 */
 	public void moveSelection(KeyCode code) {
 
-		if (grid.moveSelection(selection, code))
-			quantities.clear();
+		grid.moveSelection(selection, code);
 	}
 
 }
