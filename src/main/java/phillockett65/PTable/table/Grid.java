@@ -289,14 +289,7 @@ public class Grid {
 			ChangeChecker tileCkr, ChangeChecker brdrCkr,
 			ChangeChecker tempCkr) {
 
-		boolean gridChanged = false;
 		boolean sizeChanged = false;
-
-		if (rowCkr.isChanged())
-			gridChanged = true;
-
-		if (colCkr.isChanged())
-			gridChanged = true;
 
 		if (tileCkr.isChanged())
 			sizeChanged = true;
@@ -304,7 +297,7 @@ public class Grid {
 		if (brdrCkr.isChanged())
 			sizeChanged = true;
 
-		gridChanged = gridChange(rowCkr, colCkr);
+		boolean gridChanged = gridChange(rowCkr, colCkr);
 
 		if (sizeChanged || gridChanged) {
 			if (sizeChanged)
