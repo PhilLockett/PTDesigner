@@ -4,8 +4,7 @@ A simple application to design a periodic table layout.
 ## Overview
 This project has been set up as a Maven project that uses JavaFX, FXML and 
 CSS to render the GUI. Maven can be run from the command line as shown below.
-Maven it resolves the dependencies and builds the application independently of 
-an IDE.
+Maven resolves dependencies and builds the application independently of an IDE.
 
 The intention of this application is to easily enable changes to be made to a 
 Periodic Table layout in order to try and find an improvement to the standard 
@@ -40,5 +39,5 @@ This code has the following points of interest:
   * The table/grid window is generated with code in the table package.
   * The tabbed window is created using FXML and CSS.
   * The tabbed window was developed using SceneBuilder.
-  * The Key Handler uses a Key to Command Mapping.
+  * The Key Handler uses a "Key to Command" Mapping.
   
