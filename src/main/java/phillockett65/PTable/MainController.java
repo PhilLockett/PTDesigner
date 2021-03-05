@@ -25,33 +25,372 @@
  */
 package phillockett65.PTable;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import phillockett65.PTable.elements.ElementConfig;
+import phillockett65.PTable.elements.Elements;
 import phillockett65.PTable.table.Cell;
-import phillockett65.PTable.table.Desc;
 import phillockett65.PTable.table.PTable;
 import phillockett65.PTable.table.Quantities;
 
 public class MainController {
 
-	@FXML StatusController statusTabController;
-	@FXML DetailsController detailsTabController;
-	@FXML LytSettingsController lytSettingsTabController;
-	@FXML SttSettingsController sttSettingsTabController;
-	@FXML SubSettingsController subSettingsTabController;
+	// Details.
+	@FXML private Label datDetailsElementName;
+	@FXML private Label datDetailsElementSymbol;
+	@FXML private Label datDetailsAtomicNumber;
+	@FXML private Label datDetailsGroup;
+	@FXML private Label datDetailsGroup32;
+	@FXML private Label datDetailsPeriod;
+	@FXML private Label datDetailsAtomicWeight;
+	@FXML private Label datDetailsDensity;
+	@FXML private Label datDetailsMeltingPoint;
+	@FXML private Label datDetailsBoilingPoint;
+	@FXML private Label lblDetailsState;
+	@FXML private Label datDetailsState;
+	@FXML private Label datDetailsSpecificHeat;
+	@FXML private Label datDetailsElectronegativity;
+	@FXML private Label datDetailsSubcategory;
+	@FXML private Label datDetailsElectronShell;
+	@FXML private Label datDetailsElectronSubshell;
+	@FXML private Label datDetailsElectronConfiguration;
 
+	// Layout Settings.
+	@FXML private Spinner<Integer> spnLytRows;
+	@FXML private Spinner<Integer> spnLytColumns;
+	@FXML private Spinner<Integer> spnLytTile;
+	@FXML private Spinner<Integer> spnLytBorder;
+	@FXML private Spinner<Integer> spnLytTemp;
+	@FXML private Button btnLytColFlip;
+	@FXML private Button btnLytRowFlip;
+	@FXML private Button btnLytSettings;
+
+	// Subcategory Settings.
+	private ObservableList<String> SubcategoryList = FXCollections.observableArrayList("UNDEFINED");
+	@FXML private TextField txtSubSettings;
+	@FXML private Button btnSubSettings;
+	@FXML private ChoiceBox<String> chcSubSettings;
+	@FXML private ColorPicker colSubSettings;
+
+	// State Settings.
+	private ObservableList<String> StatesList = FXCollections.observableArrayList("UNDEFINED");
+	@FXML private TextField txtSttSettings;
+	@FXML private Button btnSttSettings;
+	@FXML private ChoiceBox<String> chcSttSettings;
+	@FXML private ColorPicker colSttSettings;
+
+	// Status.
+	@FXML private Button btnStatusUpdate;
+	@FXML private Label datStatusElementCount;
+	@FXML private Label datStatusNeighbourCount;
+	@FXML private Label datStatusElectronShell;
+	@FXML private Label datStatusElectronSubshell;
+	@FXML private Label datStatusElectronConfig;
+
+	// Main
 	private Model model;
 	private PTable table;
 
+
+	// Details.
 	/**
-	 * Constructor.
+	 * Construct a String to represent Electron Shells of the given Element.
 	 * 
-	 * Responsible for creating the Model.
+	 * @param e the Element of interest.
+	 * @return the String representing the Electron Shells. 
 	 */
-	public MainController() {
-//		System.out.println("MainController constructed.");
-		model = new Model();
+	private String genElectronShellsString(ElementConfig e) {
+		String ret = "";
+		for (int s = 0; s < e.getElectronShellCounts().length; ++s)
+			ret += String.valueOf(e.getElectronShellCounts()[s]) + ' ';
+
+		return ret;
+	}
+
+	/**
+	 * Construct a String to represent Electron Subshells of the given Element.
+	 * 
+	 * @param e the Element of interest.
+	 * @return the String representing the Electron Subshells. 
+	 */
+	private String genElectronSubshellsString(ElementConfig e) {
+		String ret = "";
+		for (int s = 0; s < e.getElectronSubshellCounts().length; ++s)
+			ret += Elements.getElectronSubshellString(s) + String.valueOf(e.getElectronSubshellCounts()[s]) + ' ';
+
+		return ret;
+	}
+
+	/**
+	 * Construct a String to represent Electron Configuration of the given 
+	 * Element.
+	 * 
+	 * @param e the Element of interest.
+	 * @return the String representing the Electron Configuration. 
+	 */
+	private String genElectronConfigurationString(ElementConfig e) {
+		String ret = "";
+		for (int s = 0; s < e.getElectronConfigurationCounts().length; ++s) {
+			final int count = e.getElectronConfigurationCounts()[s];
+			if (count != 0)
+				ret += Elements.getElectronConfigString(s)+ String.valueOf(count) + ' ';
+		}
+
+		return ret;
+	}
+
+	/**
+	 * Display the chemical elements details associated with the given cell.
+	 * 
+	 * @param cell details to display.
+	 */
+	private void updateSelectedDetails(Cell cell) {
+
+		final ElementConfig e = cell.getE();
+		datDetailsElementName.setText(e.getName());
+		datDetailsElementSymbol.setText(e.getSymbol());
+		datDetailsAtomicNumber.setText(String.valueOf(e.getZ()));
+		datDetailsGroup.setText(String.valueOf(e.getGroup()));
+		datDetailsGroup32.setText(String.valueOf(e.getGroup32()));
+		datDetailsPeriod.setText(String.valueOf(e.getPeriod()));
+		datDetailsAtomicWeight.setText(String.valueOf(e.getAtomicWeight()));
+		datDetailsDensity.setText(String.valueOf(e.getDensity()));
+		datDetailsMeltingPoint.setText(String.valueOf(e.getMelt()));
+		datDetailsBoilingPoint.setText(String.valueOf(e.getBoil()));
+
+		lblDetailsState.setText("State (at " + String.valueOf(model.getTemp()) + "K):");
+		datDetailsState.setText(getStateString(cell.getE()));
+
+		datDetailsSpecificHeat.setText(String.valueOf(e.getC()));
+		datDetailsElectronegativity.setText(String.valueOf(e.getX()));
+		datDetailsSubcategory.setText(model.getSubcategoryString(e.getSubcategory()));
+
+		datDetailsElectronShell.setText(genElectronShellsString(e));
+		datDetailsElectronSubshell.setText(genElectronSubshellsString(e));
+		datDetailsElectronConfiguration.setText(genElectronConfigurationString(e));
+	}
+
+
+	/**
+	 * Apply the changes selected by the user. Keeps track of which Spinners 
+	 * has changed and which haven't.
+	 */
+	private void updateLayoutSettings() {
+		int rows = Integer.parseInt(spnLytRows.getValue().toString());
+		int cols = Integer.parseInt(spnLytColumns.getValue().toString());
+		int tile = Integer.parseInt(spnLytTile.getValue().toString());
+		int brdr = Integer.parseInt(spnLytBorder.getValue().toString());
+		int temp = Integer.parseInt(spnLytTemp.getValue().toString());
+
+		updateLayout(rows, cols, tile, brdr, temp);
+	}
+
+
+	/**
+	 * Apply the changes selected by the user.
+	 */
+	private void updateSubcategorySettings() {
+		String text = txtSubSettings.getText();
+		if (text.length() < 1)
+			return;
+
+		final int selected = chcSubSettings.getSelectionModel().getSelectedIndex();
+		final Color colour = colSubSettings.getValue();
+		if (updateSubcategory(selected, text, colour)) {
+			SubcategoryList.set(selected, text);
+			chcSubSettings.getSelectionModel().select(selected);
+		}
+	}
+
+
+	/**
+	 * Apply the changes selected by the user.
+	 */
+	private void updateStateSettings() {
+		String text = txtSttSettings.getText();
+		if (text.length() < 1)
+			return;
+
+		final int selected = chcSttSettings.getSelectionModel().getSelectedIndex();
+		final Color colour = colSttSettings.getValue();
+		if (updateState(selected, text, colour)) {
+			StatesList.set(selected, text);
+			chcSttSettings.getSelectionModel().select(selected);
+		}
+	}
+
+
+	/**
+	 * Apply the changes selected by the user.
+	 */
+	public void updateStatusSettings() {
+		Quantities quantities = table.getQuantities();
+		datStatusElementCount.setText(quantities.getElementCount());
+		datStatusNeighbourCount.setText(quantities.getNeighbourCount());
+		datStatusElectronShell.setText(quantities.getElectronShellSimilarityPercent());
+		datStatusElectronSubshell.setText(quantities.getElectronSubshellSimilarityPercent());
+		datStatusElectronConfig.setText(quantities.getElectronConfigSimilarityPercent());
+	}
+
+
+	// Event handlers.
+
+	/**
+	 * Event handler for the Layout Settings tab Flip Columns button.
+	 * 
+	 * @param event triggered by button click.
+	 */
+	@FXML void btnSettingsFlipColumns(ActionEvent event) {
+//		System.out.println("Flip Columns.");
+		table.flipColumns();
+	}
+
+	/**
+	 * Event handler for the Layout Settings tab Flip Rows button.
+	 * 
+	 * @param event triggered by button click.
+	 */
+	@FXML void btnSettingsFlipRows(ActionEvent event) {
+//		System.out.println("Flip Rows.");
+		table.flipRows();
+	}
+
+	/**
+	 * Event handler for the Apply Change button.
+	 * 
+	 * @param event triggered by button click.
+	 */
+	@FXML void btnSettingsApplyClicked(ActionEvent event) {
+//		System.out.println("Applying Change.");
+		updateLayoutSettings();
+		updateSubcategorySettings();
+		updateStateSettings();
+	}
+
+	/**
+	 * Event handler for the Status tab Update button.
+	 * 
+	 * @param event triggered by button click.
+	 */
+	@FXML void btnStatusUpdateClicked(ActionEvent event) {
+//		System.out.println("Update Status.");
+		updateStatusSettings();
+	}
+
+
+	// Main
+
+	/**
+	 * Called by the FXML mechanism to initialize the controller. Initializes
+	 * the ColorPicker and ChoiceBox including adding a listener.
+	 */
+	private void initializeSubcategory() {
+//		System.out.println("SubSettingsController initialized.");
+
+		colSubSettings.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
+		chcSubSettings.setItems(SubcategoryList);
+
+		chcSubSettings.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> { 
+//			System.out.println("chcSettings Change.");
+			txtSubSettings.setText((String)newValue);
+			int selected = chcSubSettings.getSelectionModel().getSelectedIndex();
+			if (selected != -1)
+				colSubSettings.setValue(model.getSubcategoryColour(selected));
+		});
+	}
+
+	/**
+	 * Called by the FXML mechanism to initialize the controller. Initializes
+	 * the ColorPicker and ChoiceBox including adding a listener.
+	 */
+	private void initializeState() {
+//		System.out.println("SettingsController initialized.");
+
+		colSttSettings.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
+		chcSttSettings.setItems(StatesList);
+
+		chcSttSettings.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> { 
+//			System.out.println("chcSettings Change.");
+			txtSttSettings.setText((String)newValue);
+			int selected = chcSttSettings.getSelectionModel().getSelectedIndex();
+			if (selected != -1)
+				colSttSettings.setValue(model.getStateColour(selected));
+		});
+	}
+
+
+	/**
+	 * Initialize all the Spinners.
+	 */
+	private void initSpnSettings() {
+		SpinnerValueFactory<Integer> vFRows = new SpinnerValueFactory.IntegerSpinnerValueFactory(8, 45, model.getRows());
+		spnLytRows.setValueFactory(vFRows);
+
+		SpinnerValueFactory<Integer> vFColumns = new SpinnerValueFactory.IntegerSpinnerValueFactory(18, 45, model.getCols());
+		spnLytColumns.setValueFactory(vFColumns);
+
+		SpinnerValueFactory<Integer> vFTile = new SpinnerValueFactory.IntegerSpinnerValueFactory(25, 100, model.getTileSize());
+		spnLytTile.setValueFactory(vFTile);
+
+		SpinnerValueFactory<Integer> vFBorder = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10, model.getBorderSize());
+		spnLytBorder.setValueFactory(vFBorder);
+
+		SpinnerValueFactory<Integer> vFTemp = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, model.getMaxTemp(), model.getTemp());
+		spnLytTemp.setValueFactory(vFTemp);
+	}
+
+	/**
+	 * Initialize the ChoiceBox with data from the Model.
+	 */
+	private void initChcSubcategorySettings() {
+		int i = 0;
+		SubcategoryList.clear();
+		for (String item = model.getSubcategoryString(i++); item != null; item = model.getSubcategoryString(i++)) {
+			SubcategoryList.add(item);
+		}
+		chcSubSettings.getSelectionModel().select(1);
+	}
+
+	/**
+	 * Initialize the ColorPicker with data from the Model.
+	 */
+	private void initColSubcategorySettings() {
+		int selected = chcSubSettings.getSelectionModel().getSelectedIndex();
+		Color item = model.getSubcategoryColour(selected);
+		if (item != null)
+			colSubSettings.setValue(item);
+	}
+
+	/**
+	 * Initialize the ChoiceBox with data from the Model.
+	 */
+	private void initChcStateSettings() {
+		int i = 0;
+		StatesList.clear();
+		for (String item = model.getStateString(i++); item != null; item = model.getStateString(i++)) {
+			StatesList.add(item);
+		}
+		chcSttSettings.getSelectionModel().select(1);
+	}
+
+	/**
+	 * Initialize the ColorPicker with data from the Model.
+	 */
+	private void initColStateSettings() {
+		int selected = chcSttSettings.getSelectionModel().getSelectedIndex();
+		Color item = model.getStateColour(selected);
+		if (item != null)
+			colSttSettings.setValue(item);
 	}
 
 	/**
@@ -61,15 +400,18 @@ public class MainController {
 	 */
 	@FXML public void initialize() {
 //		System.out.println("MainController initialized.");
-		statusTabController.init(this);
-		detailsTabController.init(this);
-		lytSettingsTabController.init(this);
-		sttSettingsTabController.init(this);
-		subSettingsTabController.init(this);
+		initializeSubcategory();
+		initializeState();
+
+		initSpnSettings();
+		initChcSubcategorySettings();
+		initColSubcategorySettings();
+		initChcStateSettings();
+		initColStateSettings();
 
 		table = new PTable(this, "Periodic Table");
 
-		statusTabController.updateSettings();
+		updateStatusSettings();
 	}
 
 	public Color getStateColour(ElementConfig e) {
@@ -91,27 +433,9 @@ public class MainController {
 		return ret;
 	}
 
-	public String getStateString(int index) {
-		String ret = model.getStateString(index);
-		return ret;
-	}
-
 	public Color getSubcategoryColour(int index) {
 		Color ret = model.getSubcategoryColour(index);
 		return ret;
-	}
-
-	public String getSubcategoryString(int index) {
-		String ret = model.getSubcategoryString(index);
-		return ret;
-	}
-
-	public int getTemp() {
-		return model.getTemp();
-	}
-
-	public int getMaxTemp() {
-		return model.getMaxTemp();
 	}
 
 	public int getRows() {
@@ -120,10 +444,6 @@ public class MainController {
 
 	public int getCols() {
 		return model.getCols();
-	}
-
-	public int getTileSize() {
-		return model.getTileSize();
 	}
 
 	public int getBorderSize() {
@@ -142,13 +462,11 @@ public class MainController {
 		return model.getHeight();
 	}
 
-	public Desc getZ() {
-		return model.getZ();
+
+	public void setSelected(Cell cell) {
+		updateSelectedDetails(cell);
 	}
 
-	public Desc getSymbol() {
-		return model.getSymbol();
-	}
 
 	/**
 	 * Called by the "Subcategory Settings" tab when the "Apply Change" button 
@@ -204,23 +522,23 @@ public class MainController {
 	 * @param temp	- Temperature.
 	 */
 	public void updateLayout(int rows, int cols, int tile, int brdr, int temp) {
-		ChangeChecker rowCkr = new ChangeChecker(getRows(), rows);
+		ChangeChecker rowCkr = new ChangeChecker(model.getRows(), rows);
 		if (rowCkr.isChanged())
 			model.setRows(rowCkr.getNewValue());
 
-		ChangeChecker colCkr = new ChangeChecker(getCols(), cols);
+		ChangeChecker colCkr = new ChangeChecker(model.getCols(), cols);
 		if (colCkr.isChanged())
 			model.setCols(colCkr.getNewValue());
 
-		ChangeChecker tileCkr = new ChangeChecker(getTileSize(), tile);
+		ChangeChecker tileCkr = new ChangeChecker(model.getTileSize(), tile);
 		if (tileCkr.isChanged())
 			model.setTileSize(tileCkr.getNewValue());
 
-		ChangeChecker brdrCkr = new ChangeChecker(getBorderSize(), brdr);
+		ChangeChecker brdrCkr = new ChangeChecker(model.getBorderSize(), brdr);
 		if (brdrCkr.isChanged())
 			model.setBorderSize(brdrCkr.getNewValue());
 
-		ChangeChecker tempCkr = new ChangeChecker(getTemp(), temp);
+		ChangeChecker tempCkr = new ChangeChecker(model.getTemp(), temp);
 		if (tempCkr.isChanged()) {
 			// Update model with temperature change.
 			model.setTemp(tempCkr.getNewValue());
@@ -228,32 +546,23 @@ public class MainController {
 			// Update Details Tab with temperature change.
 			Cell cell = table.getCurrentCell();
 			if (!cell.isBlank())
-				detailsTabController.setSelected(cell);
+				updateSelectedDetails(cell);
 		}
 
 		// Update the PTable.
 		table.updateLayout(rowCkr, colCkr, tileCkr, brdrCkr, tempCkr);
 	}
 
-	/**
-	 * Reverses the order of the columns and repositions the cells.
-	 */
-	public void flipColumns() {
-		table.flipColumns();
-	}
+
 
 	/**
-	 * Reverses the order of the rows and then repositions the cells.
+	 * Constructor.
+	 * 
+	 * Responsible for creating the Model.
 	 */
-	public void flipRows() {
-		table.flipRows();
+	public MainController() {
+//		System.out.println("MainController constructed.");
+		model = new Model();
 	}
 
-	public Quantities getQuantities() {
-		return table.getQuantities();
-	}
-
-	public void setSelected(Cell cell) {
-		detailsTabController.setSelected(cell);
-	}
 }
