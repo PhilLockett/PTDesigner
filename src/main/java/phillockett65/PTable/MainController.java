@@ -325,8 +325,8 @@ public class MainController {
 	// Main
 
 	/**
-	 * Called by the FXML mechanism to initialize the controller. Initializes
-	 * the ColorPicker and ChoiceBox including adding a listener.
+	 * Initialize the Subcategory ColorPicker and ChoiceBox including adding a 
+	 * listener.
 	 */
 	private void initializeSubcategory() {
 //		System.out.println("SubSettingsController initialized.");
@@ -344,8 +344,8 @@ public class MainController {
 	}
 
 	/**
-	 * Called by the FXML mechanism to initialize the controller. Initializes
-	 * the ColorPicker and ChoiceBox including adding a listener.
+	 * Initialize the State ColorPicker and ChoiceBox including adding a 
+	 * listener.
 	 */
 	private void initializeState() {
 //		System.out.println("SettingsController initialized.");
@@ -366,7 +366,7 @@ public class MainController {
 	/**
 	 * Initialize all the Layout Spinners.
 	 */
-	private void initSpnSettings() {
+	private void initLayoutSpinners() {
 		SpinnerValueFactory<Integer> vFRows = new SpinnerValueFactory.IntegerSpinnerValueFactory(8, 45, model.getRows());
 		spnLytRows.setValueFactory(vFRows);
 
@@ -386,7 +386,7 @@ public class MainController {
 	/**
 	 * Initialize the Subcategory ChoiceBox with data from the Model.
 	 */
-	private void initChcSubcategorySettings() {
+	private void initSubcategoryChoiceBox() {
 		int i = 0;
 		SubcategoryList.clear();
 		for (String item = model.getSubcategoryString(i++); item != null; item = model.getSubcategoryString(i++)) {
@@ -398,7 +398,7 @@ public class MainController {
 	/**
 	 * Initialize the Subcategory ColorPicker with data from the Model.
 	 */
-	private void initColSubcategorySettings() {
+	private void initSubcategoryColorPicker() {
 		int selected = chcSubSettings.getSelectionModel().getSelectedIndex();
 		Color item = model.getSubcategoryColour(selected);
 		if (item != null)
@@ -408,7 +408,7 @@ public class MainController {
 	/**
 	 * Initialize the State ChoiceBox with data from the Model.
 	 */
-	private void initChcStateSettings() {
+	private void initStateChoiceBox() {
 		int i = 0;
 		StatesList.clear();
 		for (String item = model.getStateString(i++); item != null; item = model.getStateString(i++)) {
@@ -420,7 +420,7 @@ public class MainController {
 	/**
 	 * Initialize the State ColorPicker with data from the Model.
 	 */
-	private void initColStateSettings() {
+	private void initStateColorPicker() {
 		int selected = chcSttSettings.getSelectionModel().getSelectedIndex();
 		Color item = model.getStateColour(selected);
 		if (item != null)
@@ -437,11 +437,11 @@ public class MainController {
 		initializeSubcategory();
 		initializeState();
 
-		initSpnSettings();
-		initChcSubcategorySettings();
-		initColSubcategorySettings();
-		initChcStateSettings();
-		initColStateSettings();
+		initLayoutSpinners();
+		initSubcategoryChoiceBox();
+		initSubcategoryColorPicker();
+		initStateChoiceBox();
+		initStateColorPicker();
 
 		table = new PTable(this, "Periodic Table");
 
