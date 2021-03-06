@@ -183,21 +183,49 @@ public class MainController {
 
 	/**
 	 * Apply the changes selected by the user. Keeps track of which Spinners 
-	 * has changed and which haven't.
+	 * have changed and which haven't.
 	 */
 	private void updateLayoutSettings() {
-		int rows = Integer.parseInt(spnLytRows.getValue().toString());
-		int cols = Integer.parseInt(spnLytColumns.getValue().toString());
-		int tile = Integer.parseInt(spnLytTile.getValue().toString());
-		int brdr = Integer.parseInt(spnLytBorder.getValue().toString());
-		int temp = Integer.parseInt(spnLytTemp.getValue().toString());
 
-		updateLayout(rows, cols, tile, brdr, temp);
+		final int rows = Integer.parseInt(spnLytRows.getValue().toString());
+		ChangeChecker rowCkr = new ChangeChecker(model.getRows(), rows);
+		if (rowCkr.isChanged())
+			model.setRows(rowCkr.getNewValue());
+
+		final int cols = Integer.parseInt(spnLytColumns.getValue().toString());
+		ChangeChecker colCkr = new ChangeChecker(model.getCols(), cols);
+		if (colCkr.isChanged())
+			model.setCols(colCkr.getNewValue());
+
+		final int tile = Integer.parseInt(spnLytTile.getValue().toString());
+		ChangeChecker tileCkr = new ChangeChecker(model.getTileSize(), tile);
+		if (tileCkr.isChanged())
+			model.setTileSize(tileCkr.getNewValue());
+
+		final int brdr = Integer.parseInt(spnLytBorder.getValue().toString());
+		ChangeChecker brdrCkr = new ChangeChecker(model.getBorderSize(), brdr);
+		if (brdrCkr.isChanged())
+			model.setBorderSize(brdrCkr.getNewValue());
+
+		final int temp = Integer.parseInt(spnLytTemp.getValue().toString());
+		ChangeChecker tempCkr = new ChangeChecker(model.getTemp(), temp);
+		if (tempCkr.isChanged()) {
+			// Update model with temperature change.
+			model.setTemp(tempCkr.getNewValue());
+
+			// Update Details with temperature change.
+			Cell cell = table.getCurrentCell();
+			if (!cell.isBlank())
+				updateSelectedDetails(cell);
+		}
+
+		// Update the PTable.
+		table.updateLayout(rowCkr, colCkr, tileCkr, brdrCkr, tempCkr);
 	}
 
 
 	/**
-	 * Apply the changes selected by the user.
+	 * Apply the Subcategory changes selected by the user.
 	 */
 	private void updateSubcategorySettings() {
 		String text = txtSubSettings.getText();
@@ -206,7 +234,10 @@ public class MainController {
 
 		final int selected = chcSubSettings.getSelectionModel().getSelectedIndex();
 		final Color colour = colSubSettings.getValue();
-		if (updateSubcategory(selected, text, colour)) {
+		if (model.setSubcategoryString(selected, text)) {
+			model.setSubcategoryColour(selected, colour);
+			table.setSubcategoryColour(selected, colour);
+
 			SubcategoryList.set(selected, text);
 			chcSubSettings.getSelectionModel().select(selected);
 		}
@@ -214,7 +245,7 @@ public class MainController {
 
 
 	/**
-	 * Apply the changes selected by the user.
+	 * Apply the State changes selected by the user.
 	 */
 	private void updateStateSettings() {
 		String text = txtSttSettings.getText();
@@ -223,7 +254,10 @@ public class MainController {
 
 		final int selected = chcSttSettings.getSelectionModel().getSelectedIndex();
 		final Color colour = colSttSettings.getValue();
-		if (updateState(selected, text, colour)) {
+		if (model.setStateString(selected, text)) {
+			model.setStateColour(selected, colour);
+			table.setStateColour(selected, colour);
+
 			StatesList.set(selected, text);
 			chcSttSettings.getSelectionModel().select(selected);
 		}
@@ -233,7 +267,7 @@ public class MainController {
 	/**
 	 * Apply the changes selected by the user.
 	 */
-	public void updateStatusSettings() {
+	private void updateStatusSettings() {
 		Quantities quantities = table.getQuantities();
 		datStatusElementCount.setText(quantities.getElementCount());
 		datStatusNeighbourCount.setText(quantities.getNeighbourCount());
@@ -330,7 +364,7 @@ public class MainController {
 
 
 	/**
-	 * Initialize all the Spinners.
+	 * Initialize all the Layout Spinners.
 	 */
 	private void initSpnSettings() {
 		SpinnerValueFactory<Integer> vFRows = new SpinnerValueFactory.IntegerSpinnerValueFactory(8, 45, model.getRows());
@@ -350,7 +384,7 @@ public class MainController {
 	}
 
 	/**
-	 * Initialize the ChoiceBox with data from the Model.
+	 * Initialize the Subcategory ChoiceBox with data from the Model.
 	 */
 	private void initChcSubcategorySettings() {
 		int i = 0;
@@ -362,7 +396,7 @@ public class MainController {
 	}
 
 	/**
-	 * Initialize the ColorPicker with data from the Model.
+	 * Initialize the Subcategory ColorPicker with data from the Model.
 	 */
 	private void initColSubcategorySettings() {
 		int selected = chcSubSettings.getSelectionModel().getSelectedIndex();
@@ -372,7 +406,7 @@ public class MainController {
 	}
 
 	/**
-	 * Initialize the ChoiceBox with data from the Model.
+	 * Initialize the State ChoiceBox with data from the Model.
 	 */
 	private void initChcStateSettings() {
 		int i = 0;
@@ -384,7 +418,7 @@ public class MainController {
 	}
 
 	/**
-	 * Initialize the ColorPicker with data from the Model.
+	 * Initialize the State ColorPicker with data from the Model.
 	 */
 	private void initColStateSettings() {
 		int selected = chcSttSettings.getSelectionModel().getSelectedIndex();
@@ -414,6 +448,7 @@ public class MainController {
 		updateStatusSettings();
 	}
 
+
 	public Color getStateColour(ElementConfig e) {
 		final float temp = model.getTemp();
 		final int index = Model.findState(e, temp);
@@ -426,7 +461,7 @@ public class MainController {
 		return ret;
 	}
 
-	public String getStateString(ElementConfig e) {
+	private String getStateString(ElementConfig e) {
 		final float temp = model.getTemp();
 		final int index = Model.findState(e, temp);
 		String ret = model.getStateString(index);
@@ -465,92 +500,6 @@ public class MainController {
 
 	public void setSelected(Cell cell) {
 		updateSelectedDetails(cell);
-	}
-
-
-	/**
-	 * Called by the "Subcategory Settings" tab when the "Apply Change" button 
-	 * is clicked. Updates the model and the colours on the table.
-	 * 
-	 * @param index of the changed Subcategory.
-	 * @param text to use to describe the Subcategory.
-	 * @param colour to use for the Subcategory background colour.
-	 * @return true if the change was successful, false otherwise.
-	 */
-	public boolean updateSubcategory(int index, String text, Color colour) {
-
-		if (model.setSubcategoryString(index, text)) {
-			model.setSubcategoryColour(index, colour);
-			table.setSubcategoryColour(index, colour);
-
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Called by the "State Settings" tab when the "Apply Change" button is 
-	 * clicked. Updates the model and the colours on the table.
-	 * 
-	 * @param index of the changed State.
-	 * @param text to use to describe the State.
-	 * @param colour to use for the State foreground colour.
-	 * @return true if the change was successful, false otherwise.
-	 */
-	public boolean updateState(int index, String text, Color colour) {
-
-		if (model.setStateString(index, text)) {
-			model.setStateColour(index, colour);
-			table.setStateColour(index, colour);
-
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Called by the "Layout Settings" tab when the "Apply Change" button is 
-	 * clicked. Changes the layout of the grid and updates the model with the 
-	 * new data.
-	 * 
-	 * @param rows	- Row count.
-	 * @param cols	- Column count.
-	 * @param tile	- Tile size (in pixels).
-	 * @param brdr	- Border size (in pixels).
-	 * @param temp	- Temperature.
-	 */
-	public void updateLayout(int rows, int cols, int tile, int brdr, int temp) {
-		ChangeChecker rowCkr = new ChangeChecker(model.getRows(), rows);
-		if (rowCkr.isChanged())
-			model.setRows(rowCkr.getNewValue());
-
-		ChangeChecker colCkr = new ChangeChecker(model.getCols(), cols);
-		if (colCkr.isChanged())
-			model.setCols(colCkr.getNewValue());
-
-		ChangeChecker tileCkr = new ChangeChecker(model.getTileSize(), tile);
-		if (tileCkr.isChanged())
-			model.setTileSize(tileCkr.getNewValue());
-
-		ChangeChecker brdrCkr = new ChangeChecker(model.getBorderSize(), brdr);
-		if (brdrCkr.isChanged())
-			model.setBorderSize(brdrCkr.getNewValue());
-
-		ChangeChecker tempCkr = new ChangeChecker(model.getTemp(), temp);
-		if (tempCkr.isChanged()) {
-			// Update model with temperature change.
-			model.setTemp(tempCkr.getNewValue());
-
-			// Update Details Tab with temperature change.
-			Cell cell = table.getCurrentCell();
-			if (!cell.isBlank())
-				updateSelectedDetails(cell);
-		}
-
-		// Update the PTable.
-		table.updateLayout(rowCkr, colCkr, tileCkr, brdrCkr, tempCkr);
 	}
 
 
