@@ -294,8 +294,8 @@ public class Elements {
 
 	// Map ElectronConfigurations[] indices to ElectronSubshells[].
 	private static final int[] MapConfToSubs = {
-	    0, 1, 2, 3, 4, 6, 5, 7, 10, 8, 11, 15, 9, 12, 16, 19, 13, 17, 20, 22,
-	    14, 18, 21, 23, 24, -1, -1, -1, 25, -1
+		0, 1, 2, 3, 4, 6, 5, 7, 10, 8, 11, 15, 9, 12, 16, 19, 13, 17, 20, 22,
+		14, 18, 21, 23, 24, -1, -1, -1, 25, -1
 	};
 	/**
 	 * Get the electron subshell for the given electron configuration.
@@ -309,8 +309,8 @@ public class Elements {
 
 	// Map ElectronSubshells[] indices to ElectronConfigurations[].
 	private static final int[] MapSubsToConf = {
-	    0, 1, 2, 3, 4, 6, 5, 7, 9, 12, 8, 10, 13, 16, 20, 11, 14, 17, 21, 15,
-	    18, 22, 19, 23, 24, 28
+		0, 1, 2, 3, 4, 6, 5, 7, 9, 12, 8, 10, 13, 16, 20, 11, 14, 17, 21, 15,
+		18, 22, 19, 23, 24, 28
 	};
 	/**
 	 * Get the electron configuration for the given electron subshell.
@@ -324,8 +324,8 @@ public class Elements {
 
 	// Full Electron Configuration.
 	private static final int[] FinalCounts = {
-	    2, 2, 6, 2, 6, 2, 10, 6, 2, 10, 6, 2, 14, 10, 6, 2, 14, 10, 6, 2, 18,
-	    14, 10, 6, 2, 18, 14, 10, 6, 2
+		2, 2, 6, 2, 6, 2, 10, 6, 2, 10, 6, 2, 14, 10, 6, 2, 14, 10, 6, 2, 18,
+		14, 10, 6, 2, 18, 14, 10, 6, 2
 	};
 	/**
 	 * Get the electron configuration for the given electron subshell.
