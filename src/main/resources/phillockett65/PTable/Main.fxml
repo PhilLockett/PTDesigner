@@ -267,7 +267,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
       </GridPane>
-      <TextArea prefHeight="77.0" prefWidth="1050.0" text="The values below attempt to assess the quality of the layout. “Element count” simply keeps a track on the current number of elements. “Neighbour count” is the total count of adjacent elements each element has. “Electron shell similarity”, “Electron subshell similarity” and “Electron configuration similarity” is an attempt to compare these values with each neighbour, creating a total for all elements and comparing that to the values of the original layout. These are expressed as a percentage change. A positive value indicates an improvement." wrapText="true">
+      <TextArea prefHeight="77.0" prefWidth="1050.0" text="The values below attempt to assess the quality of the layout. “Element count” simply keeps track of the current number of elements. “Neighbour count” is the total count of adjacent elements each element has. “Electron shell similarity”, “Electron subshell similarity” and “Electron configuration similarity” is an attempt to compare these values with each neighbour, creating a total for all elements and comparing that to the values of the original layout. These are expressed as a percentage change. A positive value indicates an improvement." wrapText="true">
          <VBox.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </VBox.margin></TextArea>
