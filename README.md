@@ -39,5 +39,7 @@ This code has the following points of interest:
   * The table/grid window is generated with code in the table package.
   * The tabbed window is created using FXML and CSS.
   * The tabbed window was developed using SceneBuilder.
+  * A non-tabbed window is available using the NewGUI git branch.
+  * Switch to NewGUI using: `git checkout NewGUI`
   * The Key Handler uses a "Key to Command" Mapping.
   
