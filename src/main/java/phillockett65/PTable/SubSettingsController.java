@@ -40,7 +40,7 @@ public class SubSettingsController {
 	private ObservableList<String> SubcategoryList = FXCollections.observableArrayList("UNDEFINED");
 	@FXML private TextField txtSubSettings;
 	@FXML private Button btnSubSettings;
-	@FXML private ChoiceBox chcSubSettings;
+	@FXML private ChoiceBox<String> chcSubSettings;
 	@FXML private ColorPicker colSubSettings;
 
 	/**

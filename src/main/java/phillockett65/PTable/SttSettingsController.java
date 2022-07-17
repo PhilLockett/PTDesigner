@@ -40,7 +40,7 @@ public class SttSettingsController {
 	private ObservableList<String> StatesList = FXCollections.observableArrayList("UNDEFINED");
 	@FXML private TextField txtSttSettings;
 	@FXML private Button btnSttSettings;
-	@FXML private ChoiceBox chcSttSettings;
+	@FXML private ChoiceBox<String> chcSttSettings;
 	@FXML private ColorPicker colSttSettings;
 
 	/**

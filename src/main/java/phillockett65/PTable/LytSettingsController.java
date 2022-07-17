@@ -33,11 +33,11 @@ import javafx.scene.control.SpinnerValueFactory;
 public class LytSettingsController {
 
 	private MainController main;
-	@FXML private Spinner spnLytRows;
-	@FXML private Spinner spnLytColumns;
-	@FXML private Spinner spnLytTile;
-	@FXML private Spinner spnLytBorder;
-	@FXML private Spinner spnLytTemp;
+	@FXML private Spinner<Integer> spnLytRows;
+	@FXML private Spinner<Integer> spnLytColumns;
+	@FXML private Spinner<Integer> spnLytTile;
+	@FXML private Spinner<Integer> spnLytBorder;
+	@FXML private Spinner<Integer> spnLytTemp;
 	@FXML private Button btnLytColFlip;
 	@FXML private Button btnLytRowFlip;
 	@FXML private Button btnLytSettings;
